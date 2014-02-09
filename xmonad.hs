@@ -72,8 +72,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- grid select
     ,((modm,                xK_g     ), goToSelected defaultGSConfig)
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+    -- take screenshot
+    , ((modm,               xK_Print     ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
