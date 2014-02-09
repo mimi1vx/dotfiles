@@ -12,6 +12,7 @@ import Data.Monoid
 import System.Exit
 import XMonad.Util.Dmenu
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Actions.GridSelect
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -38,7 +39,8 @@ myBorderWidth   = 1
 -- ("right alt"), which does not conflict with emacs keybindings. The
 -- "windows key" is usually mod4Mask.
 --
-myModMask       = mod1Mask
+myModMask       = mod4Mask
+
 
 -- The default number of workspaces (virtual screens) and their names.
 -- By default we use numeric strings, but any string may be used as a
@@ -66,6 +68,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "dmenu_run")
+    
+    -- grid select
+    ,((modm,                xK_g     ), goToSelected defaultGSConfig)
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
@@ -229,8 +234,8 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
-
+--- myEventHook = mempty
+myEventHook = fullscreenEventHook
 ------------------------------------------------------------------------
 -- Status bars and logging
 
