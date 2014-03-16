@@ -13,6 +13,7 @@ import System.Exit
 import XMonad.Util.Dmenu
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Actions.GridSelect
+import XMonad.Layout.Tabbed
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -51,7 +52,7 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["console","chrome","quassel","sublime","steam"] ++ map show [6 .. 9]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -188,7 +189,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
+myLayout = simpleTabbed ||| tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
