@@ -13,6 +13,7 @@ import System.Exit
 import XMonad.Util.Dmenu
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Actions.GridSelect
+import XMonad.Util.Themes
 import XMonad.Layout.Tabbed
 
 import qualified XMonad.StackSet as W
@@ -189,7 +190,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = simpleTabbed ||| tiled ||| Full
+myLayout = tabbed shrinkText ( theme smallClean) ||| Full ||| tiled
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
