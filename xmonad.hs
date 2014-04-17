@@ -18,6 +18,8 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Actions.GridSelect
 import XMonad.Util.Themes
 import XMonad.Layout.Tabbed
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Fullscreen
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -193,7 +195,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tabbed shrinkText ( theme smallClean) ||| Full ||| tiled
+myLayout = smartBorders $ tabbed shrinkText ( theme smallClean) ||| Full ||| tiled
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -243,7 +245,9 @@ myManageHook = composeAll $
                  [ isFullscreen   --> doFullFloat ]
                  ++
                    -- unmanage docks such as gnome-panel and dzen
-                 [ manageDocks ]                                    -- (3)
+                 [ manageDocks
+                 , fullscreenManageHook
+                 ]
     -- windows to operate
     where myIgnores = [ "desktop","kdesktop", "desktop_window" ]
           myFloats  = [ "Steam"
@@ -268,7 +272,7 @@ myManageHook = composeAll $
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 --- myEventHook = mempty
-myEventHook = fullscreenEventHook
+myEventHook = ewmhDesktopsEventHook
 ------------------------------------------------------------------------
 -- Status bars and logging
 
