@@ -12,6 +12,9 @@ import Data.Monoid
 import System.Exit
 import XMonad.Util.Dmenu
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
 import XMonad.Actions.GridSelect
 import XMonad.Util.Themes
 import XMonad.Layout.Tabbed
@@ -219,13 +222,41 @@ myLayout = tabbed shrinkText ( theme smallClean) ||| Full ||| tiled
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
-myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Vlc"            --> doFloat
-    , className =? "Steam"          --> doFloat
-    , className =? "steam"          --> doFloat -- bigpicture-mode
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+myManageHook :: ManageHook
+myManageHook = composeAll $
+                 [ resource  =? r --> doIgnore | r <- myIgnores ]
+                 ++
+                   -- auto-float certain windows
+                 [ className =? c --> doCenterFloat | c <- myFloats ]
+                 ++
+                   -- send certain windows to certain workspaces
+                 [ className =? c --> doF (W.shift "chrome") | c <- myWebS ]
+                 ++
+                 [ className =? c --> doF (W.shift "console") | c <- myConsole ]
+                 ++
+                 [ className =? c --> doF (W.shift "quassel") | c <- myIRC ]
+                 ++
+                 [ className =? c --> doF (W.shift "steam") | c <- mySteam]
+                 ++
+                 [ className =? c --> doF (W.shift "sublime") | c <- myText ]
+                 ++
+                 [ isFullscreen   --> doFullFloat ]
+                 ++
+                   -- unmanage docks such as gnome-panel and dzen
+                 [ manageDocks ]                                    -- (3)
+    -- windows to operate
+    where myIgnores = [ "desktop","kdesktop", "desktop_window" ]
+          myFloats  = [ "Steam"
+                      , "steam"
+                      , "vlc"
+                      , "Vlc"
+                      , "mpv"
+                      ]
+          myWebS    = ["Google-chrome-stable"]
+          myConsole = ["URxvt"]
+          myIRC     = ["Quasselclient"]
+          mySteam   = ["Steam","steam"]
+          myText    = ["Sublime_text"]
 
 ------------------------------------------------------------------------
 -- Event handling
