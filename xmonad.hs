@@ -17,6 +17,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Actions.GridSelect
 import XMonad.Util.Themes
+import XMonad.Util.Run
 import XMonad.Layout.Tabbed
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
@@ -39,7 +40,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 2
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -276,12 +277,7 @@ myEventHook = ewmhDesktopsEventHook
 ------------------------------------------------------------------------
 -- Status bars and logging
 
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
-myLogHook = return ()
-
-------------------------------------------------------------------------
+-----------------------------------------------------------------------
 -- Startup hook
 
 -- Perform an arbitrary action each time xmonad starts or is restarted
@@ -296,15 +292,9 @@ myStartupHook = return ()
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad $ ewmh defaults
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = defaultConfig {
+main = do 
+    xmproc <- spawnPipe "xmobar"
+    xmonad $ ewmh defaultConfig {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -320,9 +310,9 @@ defaults = defaultConfig {
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
-        layoutHook         = myLayout,
+        layoutHook         = myLayout,      
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        logHook            = dynamicLogWithPP $ xmobarPP{ ppOutput = hPutStrLn xmproc },
         startupHook        = myStartupHook
-    }
+      }
