@@ -11,6 +11,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Actions.GridSelect
 import XMonad.Util.Themes
 import XMonad.Util.Run
+import XMonad.Util.Scratchpad
 import XMonad.Layout.Tabbed
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
@@ -47,6 +48,7 @@ toRemove x =
 toAdd x   =
 	[ ((modMask x              , xK_g  	  ), goToSelected      defaultGSConfig   )
 	, ((modMask x              , xK_Print ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'")
+  , ((modMask x              , xK_s     ), scratchpadSpawnAction defaultConfig)
 	]
 ------------------------------------------------------------------------
 -- Layouts:
@@ -111,6 +113,7 @@ myManageHook = composeAll $
                    -- unmanage docks such as gnome-panel and dzen
                  [ manageDocks
                  , fullscreenManageHook
+                 , scratchpadManageHookDefault
                  ]
     -- windows to operate
     where myIgnores = [ "desktop","kdesktop", "desktop_window" ]
