@@ -9,6 +9,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Actions.GridSelect
+import XMonad.Actions.Submap
 import XMonad.Util.Themes
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
@@ -22,7 +23,7 @@ import qualified Data.Map        as M
 ------------------------------------------------------------------------
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["con","chrome","irc","sublime","steam"] ++ map show [6 .. 9]
+myWorkspaces    = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
 ------------------------------------------------------------------------
 -- key bindings from XMonad.Config.Arossato...
@@ -48,7 +49,13 @@ toRemove x =
 toAdd x   =
 	[ ((modMask x              , xK_g  	  ), goToSelected      defaultGSConfig   )
 	, ((modMask x              , xK_Print ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'")
-  , ((modMask x              , xK_s     ), scratchpadSpawnAction defaultConfig)
+  	, ((modMask x              , xK_s     ), scratchpadSpawnAction defaultConfig)
+  	, ((modMask x .|. shiftMask, xK_p	), submap . M.fromList $
+	  	[(( 0, xK_q ),	spawn "quasselclient"		)
+		,(( 0, xK_c ),	spawn "google-chrome-stable"	)
+		,(( 0, xK_s ), 	spawn "sublime_text"		)
+		,(( 0, xK_g ),  spawn "steam"			)
+		])
 	]
 ------------------------------------------------------------------------
 -- Layouts:
@@ -98,7 +105,7 @@ myManageHook = composeAll $
                  [ className =? c --> doCenterFloat | c <- myFloats ]
                  ++
                    -- send certain windows to certain workspaces
-                 [ className =? c --> doF (W.shift "chrome") | c <- myWebS ]
+                 [ className =? c --> doF (W.shift "web") | c <- myWebS ]
                  ++
                  [ className =? c --> doF (W.shift "con") | c <- myConsole ]
                  ++
