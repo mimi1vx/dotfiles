@@ -4,7 +4,7 @@ import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Util.Dmenu
-import XMonad.Hooks.EwmhDesktops (ewmh,ewmhDesktopsEventHook)
+import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -67,7 +67,7 @@ toAdd x   =
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts $ smartBorders $ tabbed shrinkText ( theme smallClean) ||| Full ||| tiled
+myLayout = avoidStruts $ smartBorders $ Full ||| tabbed shrinkText ( theme smallClean ) ||| tiled
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
