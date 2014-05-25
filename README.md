@@ -10,4 +10,4 @@
 
 * **Xresources** 	-- X terminal colors
 
-* **fish** 		-- config and function's for fish shell
+

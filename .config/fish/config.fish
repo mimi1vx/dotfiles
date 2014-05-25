@@ -1,1 +1,0 @@
-set -xg ECHANGELOG_USER "Ondřej Súkup (mimi_vx) <mimi.vx@gmail.com>"
