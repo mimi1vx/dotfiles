@@ -1,0 +1,30 @@
+#!/bin/sh
+
+xcompmgr -sCfF&
+
+xrdb -merge $HOME/.Xresources
+
+#ssh agent invocation
+if [ -n "${SSH_AGENT_PID}" ]; then
+  eval "$(ssh-agent -k)"
+fi
+
+if [ -x /usr/bin/ssh-agent ]; then
+  eval "$(/usr/bin/ssh-agent -s)"
+fi
+
+#gpg agent
+#eval "$(/usr/bin/gpg-agent -daemon)"
+if [ $EUID -ne 0 ] ; then
+  envfile="$HOME/.gnupg/gpg-agent.env"
+  if [[ -e "$envfile" ]] && kill -0 $(grep GPG_AGENT_INFO "$envfile" | cut -d: -f 2) 2>/dev/null; then
+    eval "$(cat "$envfile")"
+  else
+    eval "$(gpg-agent --daemon --write-env-file "$envfile")"
+  fi
+  export GPG_AGENT_INFO  # the env file does not contain the export statement
+#  export SSH_AUTH_SOCK   # enable gpg-agent for ssh
+fi
+
+#start xmonad
+/usr/bin/xmonad

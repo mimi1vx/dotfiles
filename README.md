@@ -10,4 +10,4 @@
 
 * **Xresources** 	-- X terminal colors
 
-
+* **Sessions**		-- XSession file
