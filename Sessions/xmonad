@@ -26,5 +26,8 @@ if [ $EUID -ne 0 ] ; then
 #  export SSH_AUTH_SOCK   # enable gpg-agent for ssh
 fi
 
+#background 
+eval $(cat $HOME/.fehbg)
+
 #start xmonad
 /usr/bin/xmonad
