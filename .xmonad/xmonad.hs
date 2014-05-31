@@ -182,7 +182,7 @@ main = do
 
 defaults = defaultConfig {
       -- simple stuff
-        terminal           = "urxvt",
+        terminal           = "urxvtc",
         --focusFollowsMouse  = myFocusFollowsMouse,
         --clickJustFocuses   = myClickJustFocuses,
         borderWidth        = 2,
