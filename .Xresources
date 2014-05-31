@@ -22,9 +22,9 @@ URxvt.cursorColor:      yellow
 URxvt.cursorColor2:     red
 URxvt*transparent:      true
 
-!URxvt*shading:         40
-!URxvt.inheritPixmap:   true
-!URxvt*tintColor:       blue
+URxvt*shading:         40
+URxvt.inheritPixmap:   true
+URxvt*tintColor:       darkblue
 
 URxvt.colorMode:         on
 URxvt.boldColors:        on
@@ -39,4 +39,4 @@ URxvt.pastableTabs:      true
 URxvt.urlLauncher:       google-chrome-stable
 URxvt.colorUL:           #86a2be
 URxvt.underlineURLs:     true
-!URxvt.underlineColor:   yellow
+URxvt.underlineColor:   yellow
