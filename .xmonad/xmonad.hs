@@ -8,6 +8,7 @@ import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.Submap
 import XMonad.Util.Themes
@@ -15,10 +16,16 @@ import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Layout.Tabbed
 import XMonad.Layout.NoBorders
-import XMonad.Layout.Fullscreen
+import XMonad.Layout.Fullscreen 
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+
+------------------------------------------------------------------------
+-- Mouse button  defs
+
+button8 = 8 :: Button
+button9 = 9 :: Button
 
 ------------------------------------------------------------------------
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
@@ -52,11 +59,25 @@ toAdd x   =
   	, ((modMask x              , xK_s     ), scratchpadSpawnAction defaultConfig)
   	, ((modMask x .|. shiftMask, xK_p	), submap . M.fromList $
 	  	[(( 0, xK_q ),	spawn "quasselclient"		)
-		,(( 0, xK_c ),	spawn "google-chrome-stable"	)
-		,(( 0, xK_s ), 	spawn "sublime_text"		)
-		,(( 0, xK_g ),  spawn "steam"			)
+		  ,(( 0, xK_w ),	spawn "google-chrome-stable"	)
+		  ,(( 0, xK_e ), 	spawn "sublime_text"		)
+		  ,(( 0, xK_r ),  spawn "steam"			)
 		])
 	]
+------------------------------------------------------------------------
+
+defMouse    = mouseBindings defaultConfig
+
+delMouse x  = foldr M.delete            (defMouse x)  (toRemove'  x)
+
+newMouse x  = foldr (uncurry M.insert)  (delMouse x)  (toAdd'     x)
+
+toRemove' x = []
+
+toAdd'  x =
+  [ ((0,  button8), (\_ -> prevWS))
+  , ((0,  button9), (\_ -> nextWS))
+  ]
 ------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
@@ -154,7 +175,7 @@ myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 main = do 
     xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh defaults {
-    	logHook = dynamicLogWithPP $ xmobarPP{ ppOutput = hPutStrLn xmproc }
+    	logHook = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc }
     	}
 
 
@@ -172,7 +193,7 @@ defaults = defaultConfig {
 
       -- key bindings
         keys               = newKeys,
-        --mouseBindings      = myMouseBindings,
+        mouseBindings      = newMouse,
 
       -- hooks, layouts
         layoutHook         = myLayout,      
