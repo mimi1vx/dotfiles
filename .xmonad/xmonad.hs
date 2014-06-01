@@ -120,29 +120,29 @@ myManageHook :: ManageHook
 myManageHook = composeAll $
 				 [isDialog --> doFloat]
 				 ++
-                 [ resource  =? r --> doIgnore | r <- myIgnores ]
-                 ++
-                   -- auto-float certain windows
-                 [ className =? c --> doCenterFloat | c <- myFloats ]
-                 ++
-                   -- send certain windows to certain workspaces
-                 [ className =? c --> doF (W.shift "web") | c <- myWebS ]
-                 ++
-                 [ className =? c --> doF (W.shift "con") | c <- myConsole ]
-                 ++
-                 [ className =? c --> doF (W.shift "irc") | c <- myIRC ]
-                 ++
-                 [ className =? c --> doF (W.shift "steam") | c <- mySteam]
-                 ++
-                 [ className =? c --> doF (W.shift "sublime") | c <- myText ]
-                 ++
-                 [ isFullscreen   --> doFullFloat ]
-                 ++
-                   -- unmanage docks such as gnome-panel and dzen
-                 [ manageDocks
-                 , fullscreenManageHook
-                 , scratchpadManageHookDefault
-                 ]
+         [ resource  =? r --> doIgnore | r <- myIgnores ]
+         ++
+         -- auto-float certain windows
+         [ className =? c --> doCenterFloat | c <- myFloats ]
+         ++
+         -- send certain windows to certain workspaces
+         [ className =? c --> doF (W.shift "web") | c <- myWebS ]
+         ++
+         [ className =? c --> doF (W.shift "con") | c <- myConsole ]
+         ++
+         [ className =? c --> doF (W.shift "irc") | c <- myIRC ]
+         ++
+         [ className =? c --> doF (W.shift "steam") | c <- mySteam]
+         ++
+         [ className =? c --> doF (W.shift "sublime") | c <- myText ]
+         ++
+         [ isFullscreen   --> doFullFloat ]
+         ++
+         -- unmanage docks such as gnome-panel and dzen
+         [ manageDocks
+         , fullscreenManageHook
+         , scratchpadManageHookDefault
+         ]
     -- windows to operate
     where myIgnores = [ "desktop","kdesktop", "desktop_window" ]
           myFloats  = [ "Steam"
