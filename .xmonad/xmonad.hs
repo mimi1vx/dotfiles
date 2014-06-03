@@ -1,26 +1,85 @@
 -- Ondřej Súkup xmonad config ...
 
+-- main import
 import XMonad
+
+-- data import
 import Data.Monoid
+
+-- system libs import
 import System.Exit
-import XMonad.Util.Dmenu
+import System.Environment
+import System.FilePath.Posix
+import System.FilePath.Find
+import System.Directory
+
+
+-- xmonad hooks
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+--xmonad actions
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.Submap
+--xmonad utils
 import XMonad.Util.Themes
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
+--xmonad layouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen 
 
+-- import xmonad promt
+import XMonad.Prompt
+import XMonad.Prompt.Shell
+
+-- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+
+------------------------------------------------------------------------
+--                Custom Xmonad.Promt from:
+-- http://blog.tarn-vedra.de/2014/05/xmonad-loves-password-store.html
+--    promt for Pass , CLI password storage manager 
+------------------------------------------------------------------------
+
+data Pass = Pass
+
+instance XPrompt Pass where
+  showXPrompt       Pass = "Pass: "
+  commandToComplete _ c  = c
+  nextCompletion      _  = getNextCompletion
+
+passPrompt :: XPConfig -> X ()
+passPrompt c = do
+  li <- io getPasswords
+  mkXPrompt Pass c (mkComplFunFromList li) selectPassword
+
+selectPassword :: String -> X ()
+selectPassword s = spawn $ "pass -c " ++ s
+
+getPasswords :: IO [String]
+getPasswords = do
+  home <- getEnv "HOME"
+  let passwordStore = home </> ".password-store"
+  entries <- find System.FilePath.Find.always (fileName ~~? "*.gpg") $
+    passwordStore
+  return $ map ((makeRelative passwordStore) . dropExtension) entries 
+
+promptConfig = defaultXPConfig
+  { font        = "xft:Source Code Pro:pixelsize=12"
+  , borderColor = "#1e2320"
+  , fgColor     = "#dddddd"
+  , fgHLight    = "#ffffff"
+  , bgColor     = "#1e2320"
+  , bgHLight    = "#5f5f5f"
+  , height      = 18
+  , position    = Top
+  }
 ------------------------------------------------------------------------
 -- Mouse button  defs
 
@@ -46,23 +105,26 @@ toRemove x =
 	[ (modMask x              , xK_w)
 	, (modMask x              , xK_e)
 	, (modMask x              , xK_r)
+  , (modMask x              , xK_p)
 	, (modMask x .|. shiftMask, xK_w)
 	, (modMask x .|. shiftMask, xK_e)
 	, (modMask x .|. shiftMask, xK_r)
 	, (modMask x .|. shiftMask, xK_p)
 	]
 -- These are my personal key bindings
--- Grid select + screnshot
+-- Grid select + screnshot + start apps + prompts
 toAdd x   =
-	[ ((modMask x              , xK_g  	  ), goToSelected      defaultGSConfig   )
-	, ((modMask x              , xK_Print ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'")
-  	, ((modMask x              , xK_s     ), scratchpadSpawnAction defaultConfig)
-  	, ((modMask x .|. shiftMask, xK_p	), submap . M.fromList $
-	  	[(( 0, xK_q ),	spawn "quasselclient"		)
-		  ,(( 0, xK_w ),	spawn "google-chrome-stable"	)
-		  ,(( 0, xK_e ), 	spawn "sublime_text"		)
-		  ,(( 0, xK_r ),  spawn "steam"			)
-		])
+	[ ((modMask x                   , xK_g  	   ), goToSelected          defaultGSConfig )
+	, ((modMask x                   , xK_Print   ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" )
+  , ((modMask x                   , xK_s       ), scratchpadSpawnAction defaultConfig)
+  , ((modMask x .|. controlMask   , xK_p	     ), submap . M.fromList $
+	  	[(( 0, xK_q ),	spawn "quasselclient"        )
+		  ,(( 0, xK_w ),	spawn "google-chrome-stable" )
+		  ,(( 0, xK_e ), 	spawn "sublime_text"		     )
+		  ,(( 0, xK_r ),  spawn "steam"			           )
+		  ])
+  , ((modMask x               , xK_p         ), shellPrompt            promptConfig )
+  , ((modMask x .|. shiftMask , xK_p         ), passPrompt             promptConfig )
 	]
 ------------------------------------------------------------------------
 
