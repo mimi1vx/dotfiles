@@ -16,17 +16,18 @@ import System.Directory
 
 -- xmonad hooks
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
-import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 --xmonad actions
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.Submap
 --xmonad utils
-import XMonad.Util.Themes
+import XMonad.Util.Cursor
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
+import XMonad.Util.Themes
 --xmonad layouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.NoBorders
@@ -35,6 +36,7 @@ import XMonad.Layout.Fullscreen
 -- import xmonad promt
 import XMonad.Prompt
 import XMonad.Prompt.Shell
+
 
 -- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
@@ -260,6 +262,6 @@ defaults = defaultConfig {
       -- hooks, layouts
         layoutHook         = myLayout,      
         manageHook         = myManageHook,
-        handleEventHook    = myEventHook
-        --startupHook        = myStartupHook
+        handleEventHook    = myEventHook,
+        startupHook        = setDefaultCursor xC_left_ptr
         }
