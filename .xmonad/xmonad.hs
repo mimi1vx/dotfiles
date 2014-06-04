@@ -69,8 +69,8 @@ getPasswords :: IO [String]
 getPasswords = do
   	home <- getEnv "HOME"
   	let passwordStore = home </> ".password-store"
-  	entries <- find System.FilePath.Find.always (fileName ~~? "*.gpg") $ passwordStore
-  	return $ map ((makeRelative passwordStore) . dropExtension) entries 
+  	entries <- find System.FilePath.Find.always (fileName ~~? "*.gpg") passwordStore
+  	return $ map (makeRelative passwordStore . dropExtension) entries 
 
 promptConfig = defaultXPConfig
   	{ font        = "xft:Source Code Pro:pixelsize=12"
@@ -139,8 +139,8 @@ newMouse  x  = foldr (uncurry M.insert)  (delMouse x)  (toAdd'     x)
 toRemove' x = []
 
 toAdd' 	  x =
-	[ ((0,  button8), (\_ -> prevWS))
-  	, ((0,  button9), (\_ -> nextWS))
+	[ ((0,  button8), const prevWS)
+  	, ((0,  button9), const nextWS)
   	]
 ------------------------------------------------------------------------
 -- Layouts:
@@ -161,7 +161,7 @@ myLayout = avoidStruts $ smartBorders $ Full ||| tabbed shrinkText ( theme small
      	nmaster = 1
 
      	-- Default proportion of screen occupied by master pane
-     	ratio   = (2/(1+(toRational(sqrt(5)::Double))))
+     	ratio   = 2/(1+(toRational(sqrt 5::Double)))
 
      	-- Percent of screen to increment by when resizing panes
      	delta   = 5/100
