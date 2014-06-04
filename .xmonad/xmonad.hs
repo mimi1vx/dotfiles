@@ -27,6 +27,7 @@ import XMonad.Actions.Submap
 import XMonad.Util.Cursor
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
+import XMonad.Util.SpawnOnce			(spawnOnce)
 import XMonad.Util.Themes
 --xmonad layouts
 import XMonad.Layout.Tabbed
@@ -233,6 +234,14 @@ myManageHook = composeAll $
 --- myEventHook = mempty
 myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 ------------------------------------------------------------------------
+-- myStartupHook
+myStartupHook = do
+	setDefaultCursor xC_left_ptr
+	spawnOnce "google-chrome-stable"
+	spawnOnce "urxvtc"
+	spawnOnce "quasselclient"
+	spawnOnce "steam"
+------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 --
 --
@@ -263,5 +272,5 @@ defaults = defaultConfig {
         layoutHook         = myLayout,      
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        startupHook        = setDefaultCursor xC_left_ptr
+        startupHook        = myStartupHook
         }
