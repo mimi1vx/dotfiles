@@ -54,8 +54,8 @@ data Pass = Pass
 
 instance XPrompt Pass where
 	showXPrompt       Pass = "Pass: "
-  	commandToComplete _ c  = c
-  	nextCompletion      _  = getNextCompletion
+	commandToComplete _ c  = c
+	nextCompletion      _  = getNextCompletion
 
 passPrompt :: XPConfig -> X ()
 passPrompt c = do
@@ -107,7 +107,7 @@ toRemove x =
 	[ (modMask x              , xK_w)
 	, (modMask x              , xK_e)
 	, (modMask x              , xK_r)
-  	, (modMask x              , xK_p)
+  , (modMask x              , xK_p)
 	, (modMask x .|. shiftMask, xK_w)
 	, (modMask x .|. shiftMask, xK_e)
 	, (modMask x .|. shiftMask, xK_r)
@@ -116,17 +116,17 @@ toRemove x =
 -- These are my personal key bindings
 -- Grid select + screnshot + start apps + prompts
 toAdd x   =
-	[ ((modMask x                   , xK_g  	   ), goToSelected          defaultGSConfig )
+  [ ((modMask x                   , xK_g  	   ), goToSelected          defaultGSConfig )
 	, ((modMask x                   , xK_Print   ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" )
-  	, ((modMask x                   , xK_s       ), scratchpadSpawnAction defaultConfig)
-  	, ((modMask x .|. controlMask   , xK_p	     ), submap . M.fromList $
-	  	[(( 0, xK_q ),	spawn "quasselclient"        )
+  , ((modMask x                   , xK_s       ), scratchpadSpawnAction defaultConfig)
+  , ((modMask x .|. controlMask   , xK_p	     ), submap . M.fromList $
+   	[(( 0, xK_q ),	spawn "quasselclient"        )
 		,(( 0, xK_w ),	spawn "google-chrome-stable" )
 		,(( 0, xK_e ), 	spawn "sublime_text"		 )
 		,(( 0, xK_r ),  spawn "steam"			     )
 		])
-  	, ((modMask x               , xK_p         ), shellPrompt            promptConfig )
-  	, ((modMask x .|. shiftMask , xK_p         ), passPrompt             promptConfig )
+	, ((modMask x               , xK_p         ), shellPrompt            promptConfig )  	
+  , ((modMask x .|. shiftMask , xK_p         ), passPrompt             promptConfig )
 	]
 ------------------------------------------------------------------------
 
@@ -140,8 +140,8 @@ toRemove' x = []
 
 toAdd' 	  x =
 	[ ((0,  button8), const prevWS)
-  	, ((0,  button9), const nextWS)
-  	]
+  , ((0,  button9), const nextWS)
+  ]
 ------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
@@ -152,7 +152,7 @@ toAdd' 	  x =
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts $ smartBorders $ Full ||| tabbed shrinkText ( theme smallClean ) ||| tiled
+myLayout = avoidStruts $ smartBorders $ fullscreenFloat Full ||| tabbed shrinkText ( theme smallClean ) ||| tiled
   	where
      	-- default tiling algorithm partitions the screen into two panes
     	tiled   = Tall nmaster delta ratio
@@ -184,29 +184,29 @@ myManageHook :: ManageHook
 myManageHook = composeAll $
 		[isDialog --> doFloat]
 		++
-        [ resource  =? r --> doIgnore | r <- myIgnores ]
-        ++
-        -- auto-float certain windows
-        [ className =? c --> doCenterFloat | c <- myFloats ]
-        ++
-        -- send certain windows to certain workspaces
-        [ className =? c --> doF (W.shift "web") | c <- myWebS ]
-        ++
-        [ className =? c --> doF (W.shift "con") | c <- myConsole ]
-        ++
-        [ className =? c --> doF (W.shift "irc") | c <- myIRC ]
-        ++
-        [ className =? c --> doF (W.shift "steam") | c <- mySteam]
-        ++
-        [ className =? c --> doF (W.shift "sublime") | c <- myText ]
-        ++
-        [ isFullscreen   --> doFullFloat ]
-        ++
-         -- unmanage docks such as gnome-panel and dzen
-        [ manageDocks
-        , fullscreenManageHook
-        , scratchpadManageHookDefault
-        ]
+    [ resource  =? r --> doIgnore | r <- myIgnores ]
+    ++
+    -- auto-float certain windows
+    [ className =? c --> doCenterFloat | c <- myFloats ]
+    ++
+    -- send certain windows to certain workspaces
+    [ className =? c --> doF (W.shift "web") | c <- myWebS ]
+    ++
+    [ className =? c --> doF (W.shift "con") | c <- myConsole ]
+    ++
+    [ className =? c --> doF (W.shift "irc") | c <- myIRC ]
+    ++
+    [ className =? c --> doF (W.shift "steam") | c <- mySteam]
+    ++
+    [ className =? c --> doF (W.shift "sublime") | c <- myText ]
+    ++
+    [ isFullscreen   --> doFullFloat ]
+    ++
+     -- unmanage docks such as gnome-panel and dzen
+    [ manageDocks
+    , fullscreenManageHook
+    , scratchpadManageHookDefault
+    ]
     -- windows to operate
     where myIgnores = [ "desktop","kdesktop", "desktop_window" ]
           myFloats  = [ "Steam"
