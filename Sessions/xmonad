@@ -30,6 +30,9 @@ xcompmgr -sCfF&
 # background 
 eval $(cat $HOME/.fehbg)
 
+#redshift 
+redshift  -l 50:15 -m randr&
+
 # terminal daemon
 urxvtd -q -o -f
 
