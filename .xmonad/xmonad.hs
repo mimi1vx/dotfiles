@@ -207,9 +207,9 @@ myStartupHook = do
 --
 --
 main = do 
-    xmproc <- spawnPipe "xmobar"
+    spawn "xmobar"
     xmonad $ ewmh defaults {
-    	logHook = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc }
+      logHook = dynamicLogString xmobarPP >>= xmonadPropLog
     	}
 
 

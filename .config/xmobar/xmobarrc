@@ -17,9 +17,9 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
                     , Run Swap [] 10
                     , Run Kbd [("cz(qwerty)", "CS"), ("us", "US")]
     		        , Run Date "%H:%M:%S" "date" 10
-                    , Run StdinReader
+                    , Run XMonadLog
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% } { %multicpu% | %memory% * %swap% | %dynnetwork% | %LKPR% | %kbd% | <fc=#ee9a00>%date%</fc>"
+       , template = "%XMonadLog% } { %multicpu% | %memory% * %swap% | %dynnetwork% | %LKPR% | %kbd% | <fc=#ee9a00>%date%</fc>"
        }
