@@ -3,9 +3,6 @@
 -- main import
 import XMonad
 
--- data import
-import Data.Monoid
-
 -- system libs import
 import System.Exit
 import System.Environment
