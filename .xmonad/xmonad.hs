@@ -101,9 +101,9 @@ button9 = 9 :: Button
 --
 myLayout = avoidStruts $ smartBorders $ layoutHints 
     $ onWorkspace "con" ( tab ||| tiled )
-    $ onWorkspaces ["web","irc","steam"] ( fullscreenFloat Full )
-    $ onWorkspace "sublime" ( fullscreenFloat Full ||| tiled )
-    $ fullscreenFloat Full ||| tab ||| tiled
+    $ onWorkspaces ["web","irc","steam"] ( full )
+    $ onWorkspace "sublime" ( full ||| tiled )
+    $ full ||| tab ||| tiled
       where
           -- default tiling algorithm partitions the screen into two panes
           tiled   = Tall nmaster delta ratio
@@ -119,6 +119,9 @@ myLayout = avoidStruts $ smartBorders $ layoutHints
 
           -- tab is tabbed
           tab     = tabbed shrinkText ( theme smallClean )
+
+          -- full is Full
+          full    = fullscreenFloat Full
 ------------------------------------------------------------------------
 -- Window rules:
 -- Execute arbitrary actions and WindowSet manipulations when managing
