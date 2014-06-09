@@ -1,5 +1,4 @@
 -- Ondřej Súkup xmonad config ...
-
 -- main import
 import XMonad
 
@@ -9,7 +8,6 @@ import System.Environment
 import System.FilePath.Posix
 import System.FilePath.Find
 import System.Directory
-
 
 -- xmonad hooks
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
@@ -28,19 +26,18 @@ import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
 import XMonad.Util.Themes
 --xmonad layouts
-import XMonad.Layout.Tabbed
-import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen 
-
+import XMonad.Layout.LayoutHints
+import XMonad.Layout.NoBorders
+import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Tabbed
 -- import xmonad promt
 import XMonad.Prompt
 import XMonad.Prompt.Shell
 
-
 -- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
 
 ------------------------------------------------------------------------
 --                Custom Xmonad.Promt from:
@@ -83,7 +80,8 @@ promptConfig = defaultXPConfig
 ------------------------------------------------------------------------
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
+myWorkspaces :: [WorkspaceId]
+myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
 ------------------------------------------------------------------------
 -- add mouse buttons
@@ -114,8 +112,12 @@ toAdd'    x =
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts $ smartBorders $ fullscreenFloat Full ||| tabbed shrinkText ( theme smallClean ) ||| tiled
-        where
+myLayout = avoidStruts $ smartBorders $ layoutHints 
+    $ onWorkspace "con" ( tab ||| tiled )
+    $ onWorkspaces ["web","irc","steam"] ( fullscreenFloat Full )
+    $ onWorkspace "sublime" ( fullscreenFloat Full ||| tiled )
+    $ fullscreenFloat Full ||| tab ||| tiled
+      where
           -- default tiling algorithm partitions the screen into two panes
           tiled   = Tall nmaster delta ratio
 
@@ -128,6 +130,8 @@ myLayout = avoidStruts $ smartBorders $ fullscreenFloat Full ||| tabbed shrinkTe
           -- Percent of screen to increment by when resizing panes
           delta   = 5/100
 
+          -- tab is tabbed
+          tab     = tabbed shrinkText ( theme smallClean )
 ------------------------------------------------------------------------
 -- Window rules:
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -193,7 +197,7 @@ myManageHook = composeAll $
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 --- myEventHook = mempty
-myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
+myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook <+> hintsEventHook
 ------------------------------------------------------------------------
 -- myStartupHook
 myStartupHook = do
