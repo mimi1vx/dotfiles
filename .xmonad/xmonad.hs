@@ -85,24 +85,11 @@ myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
 ------------------------------------------------------------------------
 -- add mouse buttons
--- Mouse button  defs
 
 button8 = 8 :: Button
 button9 = 9 :: Button
 
-defMouse     = mouseBindings defaultConfig
-
-delMouse  x  = foldr M.delete            (defMouse x)  (toRemove'  x)
-
-newMouse  x  = foldr (uncurry M.insert)  (delMouse x)  (toAdd'     x)
-
-toRemove' x = []
-
-toAdd'    x =
-        [ ((0,  button8), const prevWS )
-        , ((0,  button9), const nextWS )
-        ]
-------------------------------------------------------------------------
+-----------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
 -- If you change layout bindings be sure to use 'mod-shift-space' after
@@ -231,7 +218,8 @@ defaults = defaultConfig {
 
     -- key bindings
     keys               = customKeys delkeys inskeys,
-    mouseBindings      = newMouse,
+    mouseBindings      = \_ -> M.fromList [ ((0,  button8), const prevWS ), 
+                                            ((0,  button9), const nextWS ) ] ,
 
     -- hooks, layouts
     layoutHook         = myLayout,      
