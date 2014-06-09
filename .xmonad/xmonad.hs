@@ -25,7 +25,7 @@ import XMonad.Util.Cursor
 import XMonad.Util.CustomKeys
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
-import XMonad.Util.SpawnOnce			(spawnOnce)
+import XMonad.Util.SpawnOnce                    (spawnOnce)
 import XMonad.Util.Themes
 --xmonad layouts
 import XMonad.Layout.Tabbed
@@ -51,35 +51,35 @@ import qualified Data.Map        as M
 data Pass = Pass
 
 instance XPrompt Pass where
-	showXPrompt       Pass = "Pass: "
-	commandToComplete _ c  = c
-	nextCompletion      _  = getNextCompletion
+        showXPrompt       Pass = "Pass: "
+        commandToComplete _ c  = c
+        nextCompletion      _  = getNextCompletion
 
 passPrompt :: XPConfig -> X ()
 passPrompt c = do
-  	li <- io getPasswords
-  	mkXPrompt Pass c (mkComplFunFromList li) selectPassword
+        li <- io getPasswords
+        mkXPrompt Pass c (mkComplFunFromList li) selectPassword
 
 selectPassword :: String -> X ()
 selectPassword s = spawn $ "pass -c " ++ s
 
 getPasswords :: IO [String]
 getPasswords = do
-  	home <- getEnv "HOME"
-  	let passwordStore = home </> ".password-store"
-  	entries <- find System.FilePath.Find.always (fileName ~~? "*.gpg") passwordStore
-  	return $ map (makeRelative passwordStore . dropExtension) entries 
+        home <- getEnv "HOME"
+        let passwordStore = home </> ".password-store"
+        entries <- find System.FilePath.Find.always (fileName ~~? "*.gpg") passwordStore
+        return $ map (makeRelative passwordStore . dropExtension) entries 
 
 promptConfig = defaultXPConfig
-  	{ font        = "xft:Source Code Pro:pixelsize=12"
-  	, borderColor = "#1e2320"
-  	, fgColor     = "#dddddd"
-  	, fgHLight    = "#ffffff"
-  	, bgColor     = "#1e2320"
-  	, bgHLight    = "#5f5f5f"
-  	, height      = 18
-  	, position    = Top
-  	}
+        { font        = "xft:Source Code Pro:pixelsize=12"
+        , borderColor = "#1e2320"
+        , fgColor     = "#dddddd"
+        , fgHLight    = "#ffffff"
+        , bgColor     = "#1e2320"
+        , bgHLight    = "#5f5f5f"
+        , height      = 18
+        , position    = Top
+        }
 ------------------------------------------------------------------------
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
@@ -100,10 +100,10 @@ newMouse  x  = foldr (uncurry M.insert)  (delMouse x)  (toAdd'     x)
 
 toRemove' x = []
 
-toAdd' 	  x =
-	[ ((0,  button8), const prevWS )
-  , ((0,  button9), const nextWS )
-  ]
+toAdd'    x =
+        [ ((0,  button8), const prevWS )
+        , ((0,  button9), const nextWS )
+        ]
 ------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
@@ -115,18 +115,18 @@ toAdd' 	  x =
 -- which denotes layout choice.
 --
 myLayout = avoidStruts $ smartBorders $ fullscreenFloat Full ||| tabbed shrinkText ( theme smallClean ) ||| tiled
-  	where
-     	-- default tiling algorithm partitions the screen into two panes
-    	tiled   = Tall nmaster delta ratio
+        where
+          -- default tiling algorithm partitions the screen into two panes
+          tiled   = Tall nmaster delta ratio
 
-     	-- The default number of windows in the master pane
-     	nmaster = 1
+          -- The default number of windows in the master pane
+          nmaster = 1
 
-     	-- Default proportion of screen occupied by master pane
-     	ratio   = 2/(1+(toRational(sqrt 5::Double)))
+          -- Default proportion of screen occupied by master pane
+          ratio   = 2/(1+(toRational(sqrt 5::Double)))
 
-     	-- Percent of screen to increment by when resizing panes
-     	delta   = 5/100
+          -- Percent of screen to increment by when resizing panes
+          delta   = 5/100
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -144,8 +144,8 @@ myLayout = avoidStruts $ smartBorders $ fullscreenFloat Full ||| tabbed shrinkTe
 --
 myManageHook :: ManageHook
 myManageHook = composeAll $
-		[isDialog --> doFloat]
-		++
+    [isDialog --> doFloat]
+    ++
     [ resource  =? r --> doIgnore | r <- myIgnores ]
     ++
     -- auto-float certain windows
@@ -197,11 +197,11 @@ myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 ------------------------------------------------------------------------
 -- myStartupHook
 myStartupHook = do
-	setDefaultCursor xC_left_ptr
-	spawnOnce "google-chrome-stable"
-	spawnOnce "urxvtc"
-	spawnOnce "quasselclient"
-	spawnOnce "steam"
+        setDefaultCursor xC_left_ptr
+        spawnOnce "google-chrome-stable"
+        spawnOnce "urxvtc"
+        spawnOnce "quasselclient"
+        spawnOnce "steam"
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 --
@@ -210,7 +210,7 @@ main = do
     spawn "xmobar"
     xmonad $ ewmh defaults {
       logHook = dynamicLogString xmobarPP >>= xmonadPropLog
-    	}
+      }
 
 
 
@@ -239,7 +239,7 @@ defaults = defaultConfig {
       delkeys :: XConfig l -> [(KeyMask, KeySym)]
       delkeys XConfig {modMask = modm} =
       -- remove xinerama and default run keys 
-           [ (modm .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
+            [ (modm .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
       inskeys :: XConfig l -> [((KeyMask, KeySym), X ())]
       inskeys conf@(XConfig {modMask = modm}) =
       --add grid select, screenshot, scratchpad, run shortcuts
