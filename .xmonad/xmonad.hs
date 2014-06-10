@@ -13,6 +13,7 @@ import XMonad.Actions.Submap
 --xmonad utils
 import XMonad.Util.Cursor
 import XMonad.Util.CustomKeys
+import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
 import XMonad.Util.Themes
@@ -163,10 +164,10 @@ myStartupHook = do
 -- Now run xmonad with all the defaults we set up.
 --
 main = do 
-    spawn "xmobar"
+    xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh defaults {
-      logHook = dynamicLogString xmobarPP >>= xmonadPropLog
-      }
+    	logHook = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc }
+    	}
 
 defaults = defaultConfig {
     terminal           = "urxvtc",
