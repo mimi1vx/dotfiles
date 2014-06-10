@@ -1,12 +1,6 @@
 -- Ondřej Súkup xmonad config ...
 -- main import
 import XMonad
-
--- system libs import
-import System.Environment
-import System.FilePath.Posix
-import System.FilePath.Find
-
 -- xmonad hooks
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.DynamicLog
@@ -30,52 +24,23 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Tabbed
 -- import xmonad promt
 import XMonad.Prompt
+import XMonad.Prompt.Pass
 import XMonad.Prompt.Shell
-
 -- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
-------------------------------------------------------------------------
---                Custom Xmonad.Promt from:
--- http://blog.tarn-vedra.de/2014/05/xmonad-loves-password-store.html
---    promt for Pass , CLI password storage manager 
-------------------------------------------------------------------------
-
-data Pass = Pass
-
-instance XPrompt Pass where
-        showXPrompt       Pass = "Pass: "
-        commandToComplete _ c  = c
-        nextCompletion      _  = getNextCompletion
-
-passPrompt :: XPConfig -> X ()
-passPrompt c = do
-        li <- io getPasswords
-        mkXPrompt Pass c (mkComplFunFromList li) selectPassword
-
-selectPassword :: String -> X ()
-selectPassword s = spawn $ "pass -c " ++ s
-
-getPasswords :: IO [String]
-getPasswords = do
-        home <- getEnv "HOME"
-        let passwordStore = home </> ".password-store"
-        entries <- find System.FilePath.Find.always (fileName ~~? "*.gpg") passwordStore
-        return $ map (makeRelative passwordStore . dropExtension) entries 
-
 promptConfig = defaultXPConfig
         { font        = "xft:Source Code Pro:pixelsize=12"
         , borderColor = "#1e2320"
-        , fgColor     = "#dddddd"
-        , fgHLight    = "#ffffff"
-        , bgColor     = "#1e2320"
-        , bgHLight    = "#5f5f5f"
+--       , fgColor     = "#dddddd"
+--        , fgHLight    = "#ffffff"
+--        , bgColor     = "#1e2320"
+--        , bgHLight    = "#5f5f5f"
         , height      = 18
         , position    = Top
         }
 ------------------------------------------------------------------------
--- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
