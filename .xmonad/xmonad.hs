@@ -84,6 +84,9 @@ myWorkspaces :: [WorkspaceId]
 myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
 ------------------------------------------------------------------------
+-- modmask bind
+mymodMask = mod4Mask
+
 -- add mouse buttons
 
 button8 = 8 :: Button
@@ -214,15 +217,19 @@ defaults = defaultConfig {
     --focusFollowsMouse  = myFocusFollowsMouse,
     --clickJustFocuses   = myClickJustFocuses,
     borderWidth        = 2,
-    modMask            = mod4Mask,
+    modMask            = mymodMask,
     workspaces         = myWorkspaces,
     --normalBorderColor  = myNormalBorderColor,
     --focusedBorderColor = myFocusedBorderColor,
 
     -- key bindings
     keys               = customKeys delkeys inskeys,
-    mouseBindings      = \_ -> M.fromList [ ((0,  button8), const prevWS ), 
-                                            ((0,  button9), const nextWS ) ] ,
+    mouseBindings      = \_ -> M.fromList [ ((mymodMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
+                                          , ((mymodMask, button2), windows . (W.shiftMaster .) . W.focusWindow)
+                                          , ((mymodMask, button3), \w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster)
+                                          , ((0,         button8), const prevWS )
+                                          , ((0,         button9), const nextWS )
+                                          ] ,
 
     -- hooks, layouts
     layoutHook         = myLayout,      
