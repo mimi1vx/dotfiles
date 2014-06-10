@@ -3,11 +3,9 @@
 import XMonad
 
 -- system libs import
-import System.Exit
 import System.Environment
 import System.FilePath.Posix
 import System.FilePath.Find
-import System.Directory
 
 -- xmonad hooks
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
@@ -21,7 +19,6 @@ import XMonad.Actions.Submap
 --xmonad utils
 import XMonad.Util.Cursor
 import XMonad.Util.CustomKeys
-import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
 import XMonad.Util.Themes
@@ -79,7 +76,6 @@ promptConfig = defaultXPConfig
         }
 ------------------------------------------------------------------------
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
@@ -88,7 +84,6 @@ myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 mymodMask = mod4Mask
 
 -- add mouse buttons
-
 button8 = 8 :: Button
 button9 = 9 :: Button
 
@@ -104,7 +99,7 @@ button9 = 9 :: Button
 --
 myLayout = avoidStruts $ smartBorders $ layoutHints 
     $ onWorkspace "con" ( tab ||| tiled )
-    $ onWorkspaces ["web","irc","steam"] ( full )
+    $ onWorkspaces ["web","irc","steam"]  full 
     $ onWorkspace "sublime" ( full ||| tiled )
     $ full ||| tab ||| tiled
       where
@@ -202,17 +197,13 @@ myStartupHook = do
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 --
---
 main = do 
     spawn "xmobar"
     xmonad $ ewmh defaults {
       logHook = dynamicLogString xmobarPP >>= xmonadPropLog
       }
 
-
-
 defaults = defaultConfig {
-    -- simple stuff
     terminal           = "urxvtc",
     --focusFollowsMouse  = myFocusFollowsMouse,
     --clickJustFocuses   = myClickJustFocuses,
@@ -221,8 +212,6 @@ defaults = defaultConfig {
     workspaces         = myWorkspaces,
     --normalBorderColor  = myNormalBorderColor,
     --focusedBorderColor = myFocusedBorderColor,
-
-    -- key bindings
     keys               = customKeys delkeys inskeys,
     mouseBindings      = \_ -> M.fromList [ ((mymodMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
                                           , ((mymodMask, button2), windows . (W.shiftMaster .) . W.focusWindow)
@@ -231,7 +220,6 @@ defaults = defaultConfig {
                                           , ((0,         button9), const nextWS )
                                           ] ,
 
-    -- hooks, layouts
     layoutHook         = myLayout,      
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
