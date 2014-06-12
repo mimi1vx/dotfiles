@@ -12,7 +12,7 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.Submap
 --xmonad utils
 import XMonad.Util.Cursor
-import XMonad.Util.CustomKeys
+import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
@@ -46,9 +46,6 @@ myWorkspaces :: [WorkspaceId]
 myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 
 ------------------------------------------------------------------------
--- modmask bind
-mymodMask = mod4Mask
-
 -- add mouse buttons
 button8 = 8 :: Button
 button9 = 9 :: Button
@@ -167,47 +164,39 @@ main = do
     xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh defaults {
     	logHook = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc }
-    	}
+    	} `removeKeys` 
+            [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
+          `additionalKeys`
+            [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       )
+            , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" )
+            , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     )                
+            , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $
+              [(( 0, xK_q ),  spawn "quasselclient"        )
+              ,(( 0, xK_w ),  spawn "google-chrome-stable" )
+              ,(( 0, xK_e ),  spawn "sublime_text"         )
+              ,(( 0, xK_r ),  spawn "steam"                )
+              ])
+            , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )   
+            , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
+            ]
+          `additionalMouseBindings`
+            [ ((0,         button8), const prevWS )
+            , ((0,         button9), const nextWS )
+            ]
+
+
 
 defaults = defaultConfig {
     terminal           = "urxvtc",
     --focusFollowsMouse  = myFocusFollowsMouse,
     --clickJustFocuses   = myClickJustFocuses,
     borderWidth        = 2,
-    modMask            = mymodMask,
+    modMask            = mod4Mask,
     workspaces         = myWorkspaces,
     --normalBorderColor  = myNormalBorderColor,
     --focusedBorderColor = myFocusedBorderColor,
-    keys               = customKeys delkeys inskeys,
-    mouseBindings      = \_ -> M.fromList [ ((mymodMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
-                                          , ((mymodMask, button2), windows . (W.shiftMaster .) . W.focusWindow)
-                                          , ((mymodMask, button3), \w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster)
-                                          , ((0,         button8), const prevWS )
-                                          , ((0,         button9), const nextWS )
-                                          ] ,
-
     layoutHook         = myLayout,      
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
     startupHook        = myStartupHook
     }
-    where
-      delkeys :: XConfig l -> [(KeyMask, KeySym)]
-      delkeys XConfig {modMask = modm} =
-      -- remove xinerama and default run keys 
-            [ (modm .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
-      inskeys :: XConfig l -> [((KeyMask, KeySym), X ())]
-      inskeys conf@(XConfig {modMask = modm}) =
-      --add grid select, screenshot, scratchpad, run shortcuts
-            [ ((modm                    , xK_g          ), goToSelected defaultGSConfig                       )
-            , ((modm                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" )
-            , ((modm                    , xK_s          ), scratchpadSpawnAction conf                         )
-            , ((modm  .|. controlMask   , xK_p          ), submap . M.fromList $
-              [(( 0, xK_q ),  spawn "quasselclient"        )
-              ,(( 0, xK_w ),  spawn "google-chrome-stable" )
-              ,(( 0, xK_e ),  spawn "sublime_text"         )
-              ,(( 0, xK_r ),  spawn "steam"                )
-              ])
-            , ((modm                    , xK_p          ), shellPrompt promptConfig )   
-            , ((modm  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
-            ]
