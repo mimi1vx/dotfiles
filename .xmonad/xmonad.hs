@@ -178,6 +178,7 @@ main = do
               ])
             , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )   
             , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
+            , ((mod4Mask                    , xK_l          ), spawn "i3lock -i Wallpaper/lock.png")
             ]
           `additionalMouseBindings`
             [ ((0,         button8), const prevWS )
