@@ -30,7 +30,7 @@ import XMonad.Prompt.Shell
 -- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
+------------------------------------------------------------------------
 promptConfig = defaultXPConfig
         { font        = "xft:Source Code Pro:pixelsize=12"
         , borderColor = "#1e2320"
@@ -44,13 +44,12 @@ promptConfig = defaultXPConfig
 ------------------------------------------------------------------------
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
-
 ------------------------------------------------------------------------
 -- add mouse buttons
 button8 = 8 :: Button
 button9 = 9 :: Button
 
------------------------------------------------------------------------
+------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
 -- If you change layout bindings be sure to use 'mod-shift-space' after
@@ -137,7 +136,6 @@ myManageHook = composeAll $
           myIRC     = ["Quasselclient"]
           mySteam   = ["Steam","steam"]
           myText    = ["Sublime_text"]
-
 ------------------------------------------------------------------------
 -- Event handling
 --
@@ -147,7 +145,6 @@ myManageHook = composeAll $
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
---- myEventHook = mempty
 myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook <+> hintsEventHook
 ------------------------------------------------------------------------
 -- myStartupHook
@@ -167,10 +164,10 @@ main = do
     	} `removeKeys` 
             [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
           `additionalKeys`
-            [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       )
-            , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" )
-            , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     )                
-            , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $
+            [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
+            , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
+            , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad               
+            , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
               [(( 0, xK_q ),  spawn "quasselclient"        )
               ,(( 0, xK_w ),  spawn "google-chrome-stable" )
               ,(( 0, xK_e ),  spawn "sublime_text"         )
@@ -181,21 +178,17 @@ main = do
             , ((mod4Mask                    , xK_l          ), spawn "i3lock -i Wallpaper/lock.png")
             ]
           `additionalMouseBindings`
-            [ ((0,         button8), const prevWS )
-            , ((0,         button9), const nextWS )
+            [ ((0,         button8), const prevWS ) -- cycle Workspace up
+            , ((0,         button9), const nextWS ) -- cycle Workspace down
             ]
 
 
 
 defaults = defaultConfig {
-    terminal           = "urxvtc",
-    --focusFollowsMouse  = myFocusFollowsMouse,
-    --clickJustFocuses   = myClickJustFocuses,
+    terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
     borderWidth        = 2,
     modMask            = mod4Mask,
     workspaces         = myWorkspaces,
-    --normalBorderColor  = myNormalBorderColor,
-    --focusedBorderColor = myFocusedBorderColor,
     layoutHook         = myLayout,      
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
