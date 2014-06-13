@@ -160,7 +160,12 @@ myStartupHook = do
 main = do 
     xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh defaults {
-    	logHook = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc }
+    	logHook = dynamicLogWithPP $ xmobarPP { 
+            ppOutput = hPutStrLn xmproc
+            -- I don't want NSP showing up at the end of my
+            -- workspace list
+            , ppSort = fmap (.scratchpadFilterOutWorkspace) $ ppSort defaultPP
+            }
     	} `removeKeys` 
             [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
           `additionalKeys`
