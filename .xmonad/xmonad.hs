@@ -34,10 +34,6 @@ import qualified Data.Map        as M
 promptConfig = defaultXPConfig
         { font        = "xft:Source Code Pro:pixelsize=12"
         , borderColor = "#1e2320"
---       , fgColor     = "#dddddd"
---        , fgHLight    = "#ffffff"
---        , bgColor     = "#1e2320"
---        , bgHLight    = "#5f5f5f"
         , height      = 18
         , position    = Top
         }
@@ -48,7 +44,6 @@ myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
 -- add mouse buttons
 button8 = 8 :: Button
 button9 = 9 :: Button
-
 ------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
@@ -67,19 +62,14 @@ myLayout = avoidStruts $ smartBorders $ layoutHints
       where
           -- default tiling algorithm partitions the screen into two panes
           tiled   = Tall nmaster delta ratio
-
           -- The default number of windows in the master pane
           nmaster = 1
-
           -- Default proportion of screen occupied by master pane
           ratio   = toRational(2/(1+sqrt 5::Double))
-
           -- Percent of screen to increment by when resizing panes
           delta   = 5/100
-
           -- tab is tabbed
           tab     = tabbed shrinkText ( theme smallClean )
-
           -- full is Full
           full    = fullscreenFloat Full
 ------------------------------------------------------------------------
@@ -106,15 +96,8 @@ myManageHook = composeAll $
     [ className =? c --> doCenterFloat | c <- myFloats ]
     ++
     -- send certain windows to certain workspaces
-    [ className =? c --> doF (W.shift "web") | c <- myWebS ]
-    ++
-    [ className =? c --> doF (W.shift "con") | c <- myConsole ]
-    ++
-    [ className =? c --> doF (W.shift "irc") | c <- myIRC ]
-    ++
-    [ className =? c --> doF (W.shift "steam") | c <- mySteam]
-    ++
-    [ className =? c --> doF (W.shift "sublime") | c <- myText ]
+    [ className =? c --> doF (W.shift wsp) | (c,wsp) <- myWorkspaceMove ]
+    -- fulscreen windows to fullfloating
     ++
     [ isFullscreen   --> doFullFloat ]
     ++
@@ -124,18 +107,12 @@ myManageHook = composeAll $
     , scratchpadManageHookDefault
     ]
     -- windows to operate
-    where myIgnores = [ "desktop","kdesktop", "desktop_window" ]
-          myFloats  = [ "Steam"
-                      , "steam"
-                      , "vlc"
-                      , "Vlc"
-                      , "mpv"
-                      ]
-          myWebS    = ["Google-chrome-stable"]
-          myConsole = ["URxvt"]
-          myIRC     = ["Quasselclient"]
-          mySteam   = ["Steam","steam"]
-          myText    = ["Sublime_text"]
+    where myIgnores        = [ "desktop","kdesktop", "desktop_window" ]
+          myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
+          myWorkspaceMove  = [("Google-chrome-stable","web"),("URxvt","con"),
+                              ("Quasselclient","irc"),("Steam","steam"),("steam","steam"),
+                              ("Sublime_text","sublime"),("Firefox","web")
+                             ]
 ------------------------------------------------------------------------
 -- Event handling
 --
@@ -186,9 +163,7 @@ main = do
             [ ((0,         button8), const prevWS ) -- cycle Workspace up
             , ((0,         button9), const nextWS ) -- cycle Workspace down
             ]
-
-
-
+------------------------------------------------------------------------
 defaults = defaultConfig {
     terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
     borderWidth        = 2,
