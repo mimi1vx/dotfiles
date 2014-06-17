@@ -2,7 +2,6 @@
 -- main import
 import XMonad
 -- xmonad hooks
-import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -122,7 +121,7 @@ myManageHook = composeAll $
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook <+> hintsEventHook
+myEventHook = fullscreenEventHook <+> hintsEventHook
 ------------------------------------------------------------------------
 -- myStartupHook
 myStartupHook = do
@@ -136,7 +135,7 @@ myStartupHook = do
 --
 main = do 
     xmproc <- spawnPipe "xmobar"
-    xmonad $ ewmh defaults {
+    xmonad $ defaults {
     	logHook = dynamicLogWithPP $ xmobarPP { 
             ppOutput = hPutStrLn xmproc
             -- I don't want NSP showing up at the end of my
