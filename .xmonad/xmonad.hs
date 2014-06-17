@@ -38,7 +38,7 @@ promptConfig = defaultXPConfig
         }
 ------------------------------------------------------------------------
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["con","web","irc","sublime","steam"] ++ map show [6 .. 9]
+myWorkspaces = ["con","web","irc","edit","steam"] ++ map show [6 .. 9]
 ------------------------------------------------------------------------
 -- add mouse buttons
 button8 = 8 :: Button
@@ -56,7 +56,7 @@ button9 = 9 :: Button
 myLayout = avoidStruts $ smartBorders $ layoutHints 
     $ onWorkspace "con" ( tab ||| tiled )
     $ onWorkspaces ["web","irc","steam"]  full 
-    $ onWorkspace "sublime" ( full ||| tiled )
+    $ onWorkspace "edit" ( full ||| tiled )
     $ full ||| tab ||| tiled
       where
           -- default tiling algorithm partitions the screen into two panes
@@ -89,28 +89,28 @@ myManageHook :: ManageHook
 myManageHook = composeAll $
     [isDialog --> doFloat]
     ++
-    [ resource  =? r --> doIgnore | r <- myIgnores ]
+    [  appName =? r --> doIgnore | r <- myIgnores ]
     ++
     -- auto-float certain windows
     [ className =? c --> doCenterFloat | c <- myFloats ]
     ++
     -- send certain windows to certain workspaces
-    [ className =? c --> doF (W.shift wsp) | (c,wsp) <- myWorkspaceMove ]
+    [ appName =? r --> doShift wsp | (r,wsp) <- myWorkspaceMove ]
     -- fulscreen windows to fullfloating
     ++
     [ isFullscreen   --> doFullFloat ]
     ++
      -- unmanage docks such as gnome-panel and dzen
-    [ manageDocks
-    , fullscreenManageHook
+    [ fullscreenManageHook
     , scratchpadManageHookDefault
+    , manageDocks 
     ]
     -- windows to operate
     where myIgnores        = [ "desktop","kdesktop", "desktop_window" ]
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
-          myWorkspaceMove  = [("Google-chrome-stable","web"),("URxvt","con"),
-                              ("Quasselclient","irc"),("Steam","steam"),("steam","steam"),
-                              ("Sublime_text","sublime"),("Firefox","web")
+          myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
+                              ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
+                              ("sublime_text","edit"),("Navigator","web"),("EDIT","edit")
                              ]
 ------------------------------------------------------------------------
 -- Event handling
@@ -149,10 +149,11 @@ main = do
             , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
             , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad               
             , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
-              [(( 0, xK_q ),  spawn "quasselclient"        )
-              ,(( 0, xK_w ),  spawn "google-chrome-stable" )
-              ,(( 0, xK_e ),  spawn "sublime_text"         )
-              ,(( 0, xK_r ),  spawn "steam"                )
+              [(( 0,            xK_q ),  spawn "quasselclient"           )
+              ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
+              ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
+              ,(( shiftMask,    xK_e ),  spawn "sublime_text"            )
+              ,(( 0,            xK_r ),  spawn "steam"                   )
               ])
             , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )   
             , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
