@@ -6,6 +6,7 @@ import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.UrgencyHook
 --xmonad actions
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
@@ -13,6 +14,7 @@ import XMonad.Actions.Submap
 --xmonad utils
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
+import XMonad.Util.NamedWindows
 import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
@@ -31,6 +33,8 @@ import XMonad.Prompt.Shell
 -- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+-- general import
+import Control.Applicative
 ------------------------------------------------------------------------
 promptConfig = defaultXPConfig
         { font        = "xft:Source Code Pro:pixelsize=12"
@@ -132,6 +136,19 @@ myStartupHook = do
         spawnOnce "quasselclient"
         spawnOnce "steam"
 ------------------------------------------------------------------------
+-- Urgency Hook:
+-- 
+-- Use libnotify notifications when the X11 urgent hint is set
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+
+instance UrgencyHook LibNotifyUrgencyHook where
+  urgencyHook LibNotifyUrgencyHook w = do
+    name <- getName w
+    wins <- gets windowset
+    whenJust (W.findTag w wins) (flash name)
+    where flash name index = spawn $ "notify-send " ++ "'Workspace "    ++ index     ++ "' "
+                                                    ++ "'Activity in: " ++ show name ++ "' "
+------------------------------------------------------------------------
 --
 -- |
 -- Helper function which provides ToggleStruts keybinding
@@ -142,13 +159,15 @@ toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b )
 -- xmobar from XMonad.Hooks.DynamicLog with scratchpad filter
 --
 myXmobar :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
-myXmobar conf = statusBar "xmobar" xmobarPP { ppSort = fmap (.scratchpadFilterOutWorkspace) $ 
-                ppSort defaultPP } toggleStrutsKey conf
+myXmobar = statusBar "xmobar" xmobarPP { ppSort = (.scratchpadFilterOutWorkspace) Control.Applicative.<$>
+                ppSort defaultPP } toggleStrutsKey
 -----------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 main = xmonad =<< myXmobar defaults
 ------------------------------------------------------------------------
-defaults = defaultConfig {
+myUrgencyHook = withUrgencyHook LibNotifyUrgencyHook 
+
+defaults = myUrgencyHook $ defaultConfig {
     terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
     borderWidth        = 2,
     modMask            = mod4Mask,
