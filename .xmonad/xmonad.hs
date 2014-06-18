@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 -- Ondřej Súkup xmonad config ...
 -- main import
 import XMonad
@@ -19,6 +20,7 @@ import XMonad.Util.Themes
 --xmonad layouts
 import XMonad.Layout.Fullscreen 
 import XMonad.Layout.LayoutHints
+import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Tabbed
@@ -53,7 +55,7 @@ button9 = 9 :: Button
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts $ smartBorders $ layoutHints 
+myLayout = smartBorders $ layoutHints 
     $ onWorkspace "con" ( tab ||| tiled )
     $ onWorkspaces ["web","irc","steam"]  full 
     $ onWorkspace "edit" ( full ||| tiled )
@@ -103,7 +105,6 @@ myManageHook = composeAll $
      -- unmanage docks such as gnome-panel and dzen
     [ fullscreenManageHook
     , scratchpadManageHookDefault
-    , manageDocks 
     ]
     -- windows to operate
     where myIgnores        = [ "desktop","kdesktop", "desktop_window" ]
@@ -131,17 +132,31 @@ myStartupHook = do
         spawnOnce "quasselclient"
         spawnOnce "steam"
 ------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
 --
-main = do 
-    xmproc <- spawnPipe "xmobar"
-    xmonad $ defaults {
-    	logHook = dynamicLogWithPP $ xmobarPP { 
-            ppOutput = hPutStrLn xmproc
-            -- I don't want NSP showing up at the end of my
-            -- workspace list
-            , ppSort = fmap (.scratchpadFilterOutWorkspace) $ ppSort defaultPP
-            }
+-- |
+-- Helper function which provides ToggleStruts keybinding
+--
+toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)
+toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b )
+------------------------------------------------------------------------
+-- xmobar from XMonad.Hooks.DynamicLog with scratchpad filter
+--
+myXmobar :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
+myXmobar conf = statusBar "xmobar" xmobarPP { ppSort = fmap (.scratchpadFilterOutWorkspace) $ 
+                ppSort defaultPP } toggleStrutsKey conf
+-----------------------------------------------------------------------
+-- Now run xmonad with all the defaults we set up.
+main = xmonad =<< myXmobar defaults
+------------------------------------------------------------------------
+defaults = defaultConfig {
+    terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
+    borderWidth        = 2,
+    modMask            = mod4Mask,
+    workspaces         = myWorkspaces,
+    layoutHook         = myLayout,      
+    manageHook         = myManageHook,
+    handleEventHook    = myEventHook,
+    startupHook        = myStartupHook
     	} `removeKeys` 
             [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
           `additionalKeys`
@@ -163,14 +178,3 @@ main = do
             [ ((0,         button8), const prevWS ) -- cycle Workspace up
             , ((0,         button9), const nextWS ) -- cycle Workspace down
             ]
-------------------------------------------------------------------------
-defaults = defaultConfig {
-    terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
-    borderWidth        = 2,
-    modMask            = mod4Mask,
-    workspaces         = myWorkspaces,
-    layoutHook         = myLayout,      
-    manageHook         = myManageHook,
-    handleEventHook    = myEventHook,
-    startupHook        = myStartupHook
-    }
