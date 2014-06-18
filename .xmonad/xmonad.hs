@@ -72,7 +72,7 @@ myLayout = smartBorders $ layoutHints
           -- tab is tabbed
           tab     = tabbed shrinkText ( theme smallClean )
           -- full is Full
-          full    = fullscreenFloat Full
+          full    = (fullscreenFloat . fullscreenFull) Full
 ------------------------------------------------------------------------
 -- Window rules:
 -- Execute arbitrary actions and WindowSet manipulations when managing
