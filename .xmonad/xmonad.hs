@@ -4,6 +4,7 @@
 import XMonad
 -- xmonad hooks
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
@@ -20,7 +21,7 @@ import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
 import XMonad.Util.Themes
 --xmonad layouts
-import XMonad.Layout.Fullscreen 
+import XMonad.Layout.Fullscreen     hiding      (fullscreenEventHook)
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
@@ -167,7 +168,7 @@ main = xmonad =<< myXmobar defaults
 ------------------------------------------------------------------------
 myUrgencyHook = withUrgencyHook LibNotifyUrgencyHook 
 
-defaults = myUrgencyHook $ defaultConfig {
+defaults = myUrgencyHook $ ewmh $ defaultConfig {
     terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
     borderWidth        = 2,
     modMask            = mod4Mask,
