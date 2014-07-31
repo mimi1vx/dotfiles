@@ -1,3 +1,4 @@
+Xcursor.theme:    gentoo
 URxvt*background: #212121
 URxvt*foreground: #C0C0C0
 URxvt.color0:     rgb:00/00/00
@@ -20,10 +21,10 @@ URxvt.color15:    rgb:ff/ff/ff
 URxvt.cursorBlink:      true
 URxvt.cursorColor:      yellow
 URxvt.cursorColor2:     red
-URxvt*transparent:      true
+!URxvt*transparent:      true
 
-URxvt*shading:         40
-URxvt.inheritPixmap:   true
+!URxvt*shading:         40
+!URxvt.inheritPixmap:   true
 URxvt*tintColor:       darkblue
 
 URxvt.colorMode:         on
@@ -39,4 +40,22 @@ URxvt.pastableTabs:      true
 URxvt.urlLauncher:       google-chrome-stable
 URxvt.colorUL:           #86a2be
 URxvt.underlineURLs:     true
-URxvt.underlineColor:   yellow
+URxvt.underlineColor:    yellow
+
+
+URxvt.depth:            32
+URxvt.background:       [80]#000000
+
+URxvt.perl-ext:
+URxvt.perl-ext-common:
+
+URxvt.urgentOnBell:	true
+
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintfull
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+URxvt.font: xft:Source Code Pro:size=9
+URxvt.letterSpace: -1
+
