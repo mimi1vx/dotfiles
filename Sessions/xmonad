@@ -25,7 +25,8 @@ if [ $EUID -ne 0 ] ; then
 fi
 
 # xcompositor
-xcompmgr -sCfF&
+#xcompmgr -sCfF&
+compton -cfb
 
 # background 
 eval $(cat $HOME/.fehbg)
@@ -34,7 +35,8 @@ eval $(cat $HOME/.fehbg)
 redshift  -l 50:15 -m randr&
 
 # terminal daemon
-urxvtd -q -o -f
+# moved to systemd unit
+#urxvtd -q -o -f 
 
 #start xmonad
 /usr/bin/xmonad
