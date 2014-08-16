@@ -45,7 +45,7 @@ promptConfig = defaultXPConfig
         }
 ------------------------------------------------------------------------
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["con","web","irc","edit","steam"] ++ map show [6 .. 9]
+myWorkspaces = ["con","web","irc","steam"] ++ map show [5 .. 9]
 ------------------------------------------------------------------------
 -- add mouse buttons
 button8 = 8 :: Button
@@ -60,10 +60,9 @@ button9 = 9 :: Button
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = smartBorders $ layoutHints 
+myLayout = smartBorders $ layoutHints
     $ onWorkspace "con" ( tab ||| tiled )
-    $ onWorkspaces ["web","irc","steam"]  full 
-    $ onWorkspace "edit" ( full ||| tiled )
+    $ onWorkspaces ["web","irc","steam"]  full
     $ full ||| tab ||| tiled
       where
           -- default tiling algorithm partitions the screen into two panes
@@ -116,7 +115,7 @@ myManageHook = composeAll $
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
                               ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
-                              ("sublime_text","edit"),("Navigator","web"),("EDIT","edit")
+                              ("Navigator","web")
                              ]
 ------------------------------------------------------------------------
 -- Event handling
@@ -133,12 +132,10 @@ myEventHook = fullscreenEventHook <+> hintsEventHook
 myStartupHook = do
         setDefaultCursor xC_left_ptr
         spawnOnce "google-chrome-stable"
-        spawnOnce "urxvtc"
         spawnOnce "quasselclient"
-        spawnOnce "steam"
 ------------------------------------------------------------------------
 -- Urgency Hook:
--- 
+--
 -- Use libnotify notifications when the X11 urgent hint is set
 data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
 
@@ -166,31 +163,30 @@ myXmobar = statusBar "xmobar" xmobarPP { ppSort = (.scratchpadFilterOutWorkspace
 -- Now run xmonad with all the defaults we set up.
 main = xmonad =<< myXmobar defaults
 ------------------------------------------------------------------------
-myUrgencyHook = withUrgencyHook LibNotifyUrgencyHook 
+myUrgencyHook = withUrgencyHook LibNotifyUrgencyHook
 
 defaults = myUrgencyHook $ ewmh $ defaultConfig {
     terminal           = "urxvtc", -- unicode rxvt as client for urxvtd started in .xsession file
     borderWidth        = 2,
     modMask            = mod4Mask,
     workspaces         = myWorkspaces,
-    layoutHook         = myLayout,      
+    layoutHook         = myLayout,
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
     startupHook        = myStartupHook
-    	} `removeKeys` 
+    	} `removeKeys`
             [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
           `additionalKeys`
             [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
             , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
-            , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad               
+            , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
             , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
               [(( 0,            xK_q ),  spawn "quasselclient"           )
               ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
               ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
-              ,(( shiftMask,    xK_e ),  spawn "sublime_text"            )
               ,(( 0,            xK_r ),  spawn "steam"                   )
               ])
-            , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )   
+            , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
             , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
             , ((mod4Mask                    , xK_l          ), spawn "i3lock -i Wallpaper/lock.png")
             ]
