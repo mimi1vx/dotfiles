@@ -38,18 +38,18 @@ import qualified Data.Map        as M
 import Control.Applicative
 ------------------------------------------------------------------------
 promptConfig = defaultXPConfig
-        { font        = "xft:Source Code Pro:pixelsize=12"
-        , borderColor = "#1e2320"
-        , height      = 18
-        , position    = Top
-        }
+    { font        = "xft:Source Code Pro:pixelsize=12"
+    , borderColor = "#1e2320"
+    , height      = 18
+    , position    = Top
+    }
 ------------------------------------------------------------------------
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["con","web","irc","steam"] ++ map show [5 .. 9]
+myWorkspaces = ["con","web","irc","email"] ++ map show [5 .. 9]
 ------------------------------------------------------------------------
 -- add mouse buttons
-button8 = 8 :: Button
-button9 = 9 :: Button
+--button8 = 8 :: Button
+--button9 = 9 :: Button
 ------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
@@ -61,10 +61,10 @@ button9 = 9 :: Button
 -- which denotes layout choice.
 --
 myLayout = smartBorders $ layoutHints
-    $ onWorkspace "con" ( tab ||| tiled )
-    $ onWorkspaces ["web","irc","steam"]  full
-    $ full ||| tab ||| tiled
-      where
+    $ onWorkspace "con" ( tab ||| tiled ||| mtiled )
+    $ onWorkspaces ["web","irc"]  full
+    $ full ||| tab ||| tiled ||| mtiled
+       where
           -- default tiling algorithm partitions the screen into two panes
           tiled   = Tall nmaster delta ratio
           -- The default number of windows in the master pane
@@ -77,6 +77,8 @@ myLayout = smartBorders $ layoutHints
           tab     = tabbed shrinkText ( theme smallClean )
           -- full is Full
           full    = (fullscreenFloat . fullscreenFull) Full
+          -- mtiled is mirrortiled
+          mtiled  = Mirror tiled
 ------------------------------------------------------------------------
 -- Window rules:
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -115,7 +117,8 @@ myManageHook = composeAll $
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
                               ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
-                              ("Navigator","web")
+                              ("Navigator","web"),("Hexchat","irc"),("hexchat","irc"),
+                              ("Thunderbird","email"),("Mail","email")
                              ]
 ------------------------------------------------------------------------
 -- Event handling
@@ -132,7 +135,10 @@ myEventHook = fullscreenEventHook <+> hintsEventHook
 myStartupHook = do
         setDefaultCursor xC_left_ptr
         spawnOnce "google-chrome-stable"
+        spawnOnce "urxvtc"
         spawnOnce "quasselclient"
+        spawnOnce "hexchat"
+        spawnOnce "thunderbird"
 ------------------------------------------------------------------------
 -- Urgency Hook:
 --
@@ -174,23 +180,19 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
     startupHook        = myStartupHook
-    	} `removeKeys`
-            [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
-          `additionalKeys`
-            [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
-            , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
-            , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
-            , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
-              [(( 0,            xK_q ),  spawn "quasselclient"           )
-              ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
-              ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
-              ,(( 0,            xK_r ),  spawn "steam"                   )
-              ])
-            , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
-            , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
-            , ((mod4Mask                    , xK_l          ), spawn "i3lock -i Wallpaper/lock.png")
-            ]
-          `additionalMouseBindings`
-            [ ((0,         button8), const prevWS ) -- cycle Workspace up
-            , ((0,         button9), const nextWS ) -- cycle Workspace down
-            ]
+   	}   --`removeKeys`
+        --  [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
+        `additionalKeys`
+        [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
+        , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
+        , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
+        , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
+            [(( 0,            xK_q ),  spawn "quasselclient"           )
+            ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
+            ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
+            ,(( 0,            xK_r ),  spawn "steam"                   )
+            ])
+        , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
+        , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
+        , ((mod4Mask                    , xK_l          ), spawn "i3lock"           )
+        ]
