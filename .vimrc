@@ -18,11 +18,12 @@ Plugin 'Rip-Rip/clang_complete'
 Plugin 'vim-latex/vim-latex'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/syntastic'
+Plugin 'ervandew/supertab'
 
 "las line for plugins
 call vundle#end()
 
-colorscheme monokai
+colorscheme molokai
 set encoding=utf-8
 
 set backspace=indent,eol,start
@@ -36,7 +37,7 @@ set cursorline          " highlight current line
 
 set showmode
 
-map Q gq
+"map Q gq
 
 "tabs expand
 set tabstop=4       " number of visual spaces per TAB
