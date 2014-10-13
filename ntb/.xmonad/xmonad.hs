@@ -36,6 +36,7 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 -- general import
 import Control.Applicative
+import Graphics.X11.ExtraTypes.XF86
 ------------------------------------------------------------------------
 promptConfig = defaultXPConfig
     { font        = "xft:Source Code Pro:pixelsize=12"
@@ -45,7 +46,7 @@ promptConfig = defaultXPConfig
     }
 ------------------------------------------------------------------------
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["con","web","irc","email"] ++ map show [5 .. 9]
+myWorkspaces = ["con","web","irc"] ++ map show [4 .. 9]
 ------------------------------------------------------------------------
 -- add mouse buttons
 --button8 = 8 :: Button
@@ -117,8 +118,7 @@ myManageHook = composeAll $
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
                               ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
-                              ("Navigator","web"),("Hexchat","irc"),("hexchat","irc"),
-                              ("Thunderbird","email"),("Mail","email")
+                              ("Navigator","web"),("Hexchat","irc"),("hexchat","irc")
                              ]
 ------------------------------------------------------------------------
 -- Event handling
@@ -137,8 +137,6 @@ myStartupHook = do
         spawnOnce "google-chrome-stable"
         spawnOnce "urxvtc-256color"
         spawnOnce "quasselclient"
-        spawnOnce "hexchat"
-        spawnOnce "thunderbird"
 ------------------------------------------------------------------------
 -- Urgency Hook:
 --
@@ -192,7 +190,10 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
             ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
             ,(( 0,            xK_r ),  spawn "steam"                   )
             ])
-        , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
+        , ((mod4Mask                    , xK_p                ), shellPrompt promptConfig )
 --        , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
-        , ((mod4Mask                    , xK_l          ), spawn "i3lock -i wall/lock.png"           )
+        , ((mod4Mask                    , xK_l                    ), spawn "i3lock -i wall/lock.png"          )
+        , (( 0                          , xF86XK_AudioMute        ), spawn "pulseaudio-ctl mute"              )
+        , (( 0                          , xF86XK_AudioRaiseVolume ), spawn "pulseaudio-ctl up"                )
+        , (( 0                          , xF86XK_AudioLowerVolume ), spawn "pulseaudio-ctl down"              )
         ]
