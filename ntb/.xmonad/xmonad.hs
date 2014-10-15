@@ -9,14 +9,12 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
 --xmonad actions
-import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.Submap
 --xmonad utils
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedWindows
-import XMonad.Util.Run
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce                    (spawnOnce)
 import XMonad.Util.Themes
@@ -29,7 +27,6 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Tabbed
 -- import xmonad promt
 import XMonad.Prompt
---import XMonad.Prompt.Pass
 import XMonad.Prompt.Shell
 -- qualified imports of Data and Stack
 import qualified XMonad.StackSet as W
