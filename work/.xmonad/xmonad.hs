@@ -110,8 +110,8 @@ myManageHook = composeAll $
     where myIgnores        = [ "desktop","kdesktop", "desktop_window" ]
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
-                              ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
-                              ("Navigator","web"),("Hexchat","irc"),("hexchat","irc"),
+                              ("quasselclient","irc"),("Steam","steam"),
+                              ("steam","steam"),("Navigator","web"),("weechat","irc"),
                               ("Thunderbird","email"),("Mail","email")
                              ]
 ------------------------------------------------------------------------
@@ -131,7 +131,7 @@ myStartupHook = do
         spawnOnce "google-chrome-stable"
         spawnOnce "urxvtc"
         spawnOnce "quasselclient"
-        spawnOnce "hexchat"
+        spawnOnce "urxvtc -name weechat -e weechat"
         spawnOnce "thunderbird"
 ------------------------------------------------------------------------
 -- Urgency Hook:
@@ -174,13 +174,14 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
     startupHook        = myStartupHook
-   	}  
+   	}
         `additionalKeys`
         [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
         , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
         , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
         , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
             [(( 0,            xK_q ),  spawn "quasselclient"           )
+            ,((controlMask,   xK_q),   spawn "urxvtc -name weechat -e weechat" )
             ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
             ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
             ,(( 0,            xK_r ),  spawn "steam"                   )
