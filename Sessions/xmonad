@@ -26,7 +26,7 @@ fi
 
 # xcompositor
 #xcompmgr -sCfF&
-compton -cfb
+compton -cfzb
 
 # background 
 eval $(cat $HOME/.fehbg)
@@ -35,9 +35,8 @@ eval $(cat $HOME/.fehbg)
 redshift  -l 50:15 -m randr&
 
 # terminal daemon
-# moved to systemd unit
-#urxvtd -q -o -f 
+urxvtd -q -o -f 
 
 #start xmonad
-/usr/bin/xmonad
+/usr/bin/xmonad &> $HOME/.xmonad.log
 
