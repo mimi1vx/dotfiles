@@ -44,7 +44,7 @@ URxvt.underlineColor:    yellow
 
 
 URxvt.depth:            32
-URxvt.background:       [80]#000000
+URxvt.background:       [70]#000000
 
 URxvt.perl-ext:
 URxvt.perl-ext-common:
