@@ -1,9 +1,9 @@
 Config { font =  "xft:Source Code Pro:pixelsize=11:weight=Bold"
        , borderColor = "red"
-       , border = TopB
+       , border = TopB 
        , bgColor = "black"
        , fgColor = "grey"
-       , position = Bottom
+       , position = BottomW L 93
        , lowerOnStart = True
        , pickBroadest = True
        , persistent = False
