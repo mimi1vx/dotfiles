@@ -94,7 +94,7 @@ myManageHook = composeAll $
     [  appName =? r --> doIgnore | r <- myIgnores ]
     ++
     -- auto-float certain windows
-    [ className =? c --> doCenterFloat | c <- myFloats ]
+    [ className =? c --> doCenterFloat | c <- myCenFloats ]
     ++
     -- send certain windows to certain workspaces
     [ appName =? r --> doShift wsp | (r,wsp) <- myWorkspaceMove ]
@@ -102,13 +102,17 @@ myManageHook = composeAll $
     ++
     [ isFullscreen   --> doFullFloat ]
     ++
-     -- unmanage docks such as gnome-panel and dzen
+    -- do float
+    [ title =? t --> doFloat | t <- myFloats ]
+    ++
+    -- unmanage docks such as gnome-panel and dzen
     [ fullscreenManageHook
     , scratchpadManageHookDefault
     ]
     -- windows to operate
     where myIgnores        = [ "desktop","kdesktop", "desktop_window" ]
-          myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
+          myCenFloats      = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
+          myFloats         = [ "Hangouts" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
                               ("quasselclient","irc"),("Steam","steam"),
                               ("steam","steam"),("Navigator","web"),("weechat","irc"),
@@ -128,6 +132,7 @@ myEventHook = fullscreenEventHook <+> hintsEventHook
 -- myStartupHook
 myStartupHook = do
         setDefaultCursor xC_left_ptr
+        spawnOnce "stalonetray"
         spawnOnce "google-chrome-stable"
         spawnOnce "urxvtc"
         spawnOnce "quasselclient"
@@ -175,7 +180,11 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
     handleEventHook    = myEventHook,
     startupHook        = myStartupHook
    	}
-        `additionalKeys`
+    `removeKeys`
+        [ (mod4Mask,               xK_p     )
+        , (mod4Mask .|. shiftMask, xK_p     )
+        ]
+    `additionalKeys`
         [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
         , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
         , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
@@ -189,4 +198,5 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
         , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
         , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
         , ((mod4Mask                    , xK_l          ), spawn "i3lock"           )
+        , ((mod4Mask                    , xK_x          ), spawn "dmenu_run"        )
         ]
