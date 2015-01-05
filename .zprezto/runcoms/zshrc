@@ -17,6 +17,6 @@ fi
 setopt SHARE_HISTORY
 
 #own aliases
-alias _="sudo"
+
 
 
