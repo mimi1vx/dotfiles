@@ -167,8 +167,8 @@ instance UrgencyHook LibNotifyUrgencyHook where
        wins <- gets windowset
        whenJust (W.findTag w wins)
                 (flash name)
-    where flash name index = spawn $ "notify-send " ++ "'Workspace " 
-                                                    ++ index ++ "' " ++ "'Activity in: " 
+    where flash name index = spawn $ "notify-send " ++ "'Workspace "
+                                                    ++ index ++ "' " ++ "'Activity in: "
                                                     ++ show name ++ "' "
 ------------------------------------------------------------------------
 --
