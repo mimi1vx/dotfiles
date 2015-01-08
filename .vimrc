@@ -30,9 +30,9 @@ set autoindent
 
 set history=1000
 set ruler
-set number 		" show line numbers
+set number relativenumber	" show line numbers
 set showcmd 		" show command in bottom bar
-set cursorline          " highlight current line
+set cursorline      " highlight current line
 
 set showmode
 
