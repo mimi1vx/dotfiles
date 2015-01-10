@@ -116,7 +116,7 @@ myManageHook = composeAll $
     where myIgnores        = [ "desktop","kdesktop", "desktop_window", "stalonetray" ]
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
-                              ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
+                              ("weechat","irc"),("Steam","steam"),("steam","steam"),
                               ("Navigator","web"),("Hexchat","irc"),("hexchat","irc"),
                               ("Thunderbird","email"),("Mail","email")
                              ]
@@ -129,14 +129,15 @@ myManageHook = composeAll $
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = fullscreenEventHook <+> hintsEventHook
+myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook <+> hintsEventHook
+
 ------------------------------------------------------------------------
 -- myStartupHook
 myStartupHook = do
         setDefaultCursor xC_left_ptr
         spawnOnce "google-chrome-stable"
         spawnOnce "urxvtc"
-        spawnOnce "quasselclient"
+        spawnOnce "urxvtc -name weechat -e weechat"
 ------------------------------------------------------------------------
 -- Urgency Hook:
 --
@@ -178,21 +179,21 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
     manageHook         = myManageHook,
     handleEventHook    = myEventHook,
     startupHook        = myStartupHook
-   	}   --`removeKeys`
-        --  [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
+   	}   `removeKeys`
+        [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
         `additionalKeys`
         [ ((mod4Mask                    , xK_g          ), goToSelected defaultGSConfig                       ) -- Gridselect
         , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
         , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
         , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
-            [(( 0,            xK_q ),  spawn "quasselclient"           )
+            [(( 0,            xK_q ),  spawn "urxvtc -name weechat -e weechat"           )
             ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
             ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
             ,(( 0,            xK_r ),  spawn "steam"                   )
             ])
         , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
         , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
-        , ((mod4Mask                    , xK_l          ), spawn "i3lock"           )
+        , ((mod4Mask                    , xK_l          ), spawn "i3lock -i ./Wallpaper/lock.png"           )
         ]
         `additionalMouseBindings`
         [ ((0,         button8), const prevWS ) -- cycle Workspace up
