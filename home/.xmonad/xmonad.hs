@@ -141,6 +141,7 @@ myStartupHook = do
         spawnOnce "google-chrome-stable"
         spawnOnce "urxvtc"
         spawnOnce "urxvtc -name weechat -e weechat"
+        spawnOnce "stalonetray"
 ------------------------------------------------------------------------
 -- Urgency Hook:
 --
