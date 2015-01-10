@@ -100,7 +100,9 @@ myManageHook = composeAll $
     [  appName =? r --> doIgnore | r <- myIgnores ]
     ++
     -- auto-float certain windows
-    [ className =? c --> doCenterFloat | c <- myFloats ]
+    [ className =? c --> doCenterFloat | c <- myCenFloats ]
+    ++
+    [ title =? t --> doFloat | t <- myFloat ]
     ++
     -- send certain windows to certain workspaces
     [ appName =? r --> doShift wsp | (r,wsp) <- myWorkspaceMove ]
@@ -114,7 +116,8 @@ myManageHook = composeAll $
     ]
     -- windows to operate
     where myIgnores        = [ "desktop","kdesktop", "desktop_window", "stalonetray" ]
-          myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
+          myCenFloats      = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
+          myFloat          = [ "Hangouts" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
                               ("weechat","irc"),("Steam","steam"),("steam","steam"),
                               ("Navigator","web"),("Hexchat","irc"),("hexchat","irc"),
