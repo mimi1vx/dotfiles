@@ -1,0 +1,6 @@
+transparent true
+icon_size 17
+sticky true
+max_geometry 8x1
+geometry 8x1+1784+1063
+window_strut bottom
