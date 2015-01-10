@@ -1,11 +1,11 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+Config { font = "xft:Source Code Pro:pixelsize=11:weight=Bold"
        , borderColor = "red"
        , border = TopB
        , bgColor = "black"
        , fgColor = "grey"
-       , position = Bottom
+       , position = BottomW L 93
        , lowerOnStart = True
-       , pickBroadest = False
+       , pickBroadest = True
        , persistent = False
        , hideOnStart = False
        , allDesktops = True
