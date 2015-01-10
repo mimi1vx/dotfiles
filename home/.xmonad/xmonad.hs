@@ -35,6 +35,7 @@ import XMonad.Prompt.Shell
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 -- general import
+import Graphics.X11.ExtraTypes.XF86
 import Control.Applicative
 ------------------------------------------------------------------------
 promptConfig = defaultXPConfig
@@ -198,6 +199,10 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
         , ((mod4Mask                    , xK_p          ), shellPrompt promptConfig )
         , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
         , ((mod4Mask                    , xK_l          ), spawn "i3lock -i ./Wallpaper/lock.png"           )
+        , (( 0                          , xF86XK_AudioMute        ), spawn "pulseaudio-ctl mute"              )
+        , (( 0                          , xF86XK_AudioRaiseVolume ), spawn "pulseaudio-ctl up"                )
+        , (( 0                          , xF86XK_AudioLowerVolume ), spawn "pulseaudio-ctl down"              )
+
         ]
         `additionalMouseBindings`
         [ ((0,         button8), const prevWS ) -- cycle Workspace up
