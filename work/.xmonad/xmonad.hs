@@ -125,7 +125,6 @@ myManageHook =
         myWorkspaceMove =
           [("Google-chrome-stable","web")
           ,("urxvt","con")
-          ,("quasselclient","irc")
           ,("Steam","steam")
           ,("steam","steam")
           ,("Navigator","web")
@@ -150,7 +149,6 @@ myStartupHook =
      spawnOnce "stalonetray"
      spawnOnce "google-chrome-stable"
      spawnOnce "urxvtc"
-     spawnOnce "quasselclient"
      spawnOnce "urxvtc -name weechat -e weechat"
      spawnOnce "thunderbird"
 ------------------------------------------------------------------------
@@ -211,8 +209,7 @@ defaults =
   ,((mod4Mask,xK_s),scratchpadSpawnAction defaults) -- scratchpad
   ,((mod4Mask .|. controlMask,xK_p)
    ,submap . M.fromList $ -- add submap Ctrl+Win+P,key
-    [((0,xK_q),spawn "quasselclient")
-    ,((controlMask,xK_q),spawn "urxvtc -name weechat -e weechat")
+    [((0,xK_q),spawn "urxvtc -name weechat -e weechat")
     ,((0,xK_w),spawn "google-chrome-stable")
     ,((0,xK_e),spawn "urxvtc -name EDIT -e vim")
     ,((0,xK_r),spawn "steam")])
