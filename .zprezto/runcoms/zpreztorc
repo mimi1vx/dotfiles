@@ -34,6 +34,7 @@ zstyle ':prezto:load' pmodule \
   'utility' \
   'git' \
   'completion' \
+  'syntax-highlighting' \
   'prompt'
 
 #
@@ -44,7 +45,7 @@ zstyle ':prezto:load' pmodule \
 zstyle ':prezto:module:editor' key-bindings 'vi'
 
 # Auto convert .... to ../..
- zstyle ':prezto:module:editor' dot-expansion 'yes'
+zstyle ':prezto:module:editor' dot-expansion 'yes'
 
 #
 # Git
@@ -157,3 +158,4 @@ zstyle ':prezto:module:terminal:tab-title' format '%m: %s'
 
 # Integrate with iTerm2.
 # zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+
