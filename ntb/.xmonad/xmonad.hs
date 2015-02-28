@@ -36,14 +36,14 @@ import Control.Applicative
 import Graphics.X11.ExtraTypes.XF86
 ------------------------------------------------------------------------
 promptConfig = defaultXPConfig
-    { font        = "xft:Source Code Pro:pixelsize=12"
+    { font        = "xft:Source Code Pro:pixelsize=14"
     , borderColor = "#1e2320"
     , height      = 18
     , position    = Top
     }
 ------------------------------------------------------------------------
 myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["con","web","irc"] ++ map show [4 .. 9]
+myWorkspaces = ["con","web","irc","email"] ++ map show [5 .. 9]
 ------------------------------------------------------------------------
 -- add mouse buttons
 --button8 = 8 :: Button
@@ -58,9 +58,9 @@ myWorkspaces = ["con","web","irc"] ++ map show [4 .. 9]
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = smartBorders $ layoutHints
+myLayout = avoidStruts $ smartBorders $ layoutHints
     $ onWorkspace "con" ( tab ||| tiled ||| mtiled )
-    $ onWorkspaces ["web","irc"]  full
+    $ onWorkspaces ["web","irc","email"]  full
     $ full ||| tab ||| tiled ||| mtiled
        where
           -- default tiling algorithm partitions the screen into two panes
@@ -106,17 +106,22 @@ myManageHook = composeAll $
     ++
     [ isFullscreen   --> doFullFloat ]
     ++
+    [ title =? t --> doFloat | t <- myTitleFloats ]
+    ++
      -- unmanage docks such as gnome-panel and dzen
     [ fullscreenManageHook
     , scratchpadManageHookDefault
+    , manageDocks
     ]
     -- windows to operate
     where myIgnores        = [ "desktop","kdesktop", "desktop_window" ]
           myFloats         = [ "Steam", "steam","vlc", "Vlc", "mpv" ]
           myWorkspaceMove  = [("Google-chrome-stable","web"),("urxvt","con"),
-                              ("quasselclient","irc"),("Steam","steam"),("steam","steam"),
-                              ("Navigator","web"),("Hexchat","irc"),("hexchat","irc")
+                              ("weechat","irc"),("Steam","steam"),("steam","steam"),
+                              ("Navigator","web"),("Weechat","irc"),
+                              ("Thunderbird","email"),("Mail","email")
                              ]
+          myTitleFloats    = [ "Hangouts" ]
 ------------------------------------------------------------------------
 -- Event handling
 --
@@ -126,14 +131,13 @@ myManageHook = composeAll $
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = fullscreenEventHook <+> hintsEventHook
+myEventHook = fullscreenEventHook <+> hintsEventHook <+> docksEventHook
 ------------------------------------------------------------------------
 -- myStartupHook
 myStartupHook = do
         setDefaultCursor xC_left_ptr
         spawnOnce "google-chrome-stable"
         spawnOnce "urxvtc-256color"
-        spawnOnce "quasselclient"
 ------------------------------------------------------------------------
 -- Urgency Hook:
 --
@@ -182,10 +186,10 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
         , ((mod4Mask                    , xK_Print      ), spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'" ) -- screenshot
         , ((mod4Mask                    , xK_s          ), scratchpadSpawnAction defaults                     ) -- scratchpad
         , ((mod4Mask  .|. controlMask   , xK_p          ), submap . M.fromList $ -- add submap Ctrl+Win+P,key
-            [(( 0,            xK_q ),  spawn "quasselclient"           )
+            [(( 0,            xK_q ),  spawn "urxvtc-256color -name Weechat -e weechat"           )
             ,(( 0,            xK_w ),  spawn "google-chrome-stable"    )
-            ,(( 0,            xK_e ),  spawn "urxvtc -name EDIT -e vim")
-            ,(( 0,            xK_r ),  spawn "steam"                   )
+            ,(( 0,            xK_e ),  spawn "urxvtc-256color -name EDIT -e vim")
+            ,(( 0,            xK_r ),  spawn "thunderbird"                   )
             ])
         , ((mod4Mask                    , xK_p                ), shellPrompt promptConfig )
 --        , ((mod4Mask  .|. shiftMask     , xK_p          ), passPrompt promptConfig  )
@@ -195,4 +199,5 @@ defaults = myUrgencyHook $ ewmh $ defaultConfig {
         , (( 0                          , xF86XK_AudioLowerVolume ), spawn "pulseaudio-ctl down"              )
         , (( 0                          , xF86XK_MonBrightnessUp  ), spawn "xbacklight +5"                    )
         , (( 0                          , xF86XK_MonBrightnessDown), spawn "xbacklight -5"                    )
+        , (( mod4Mask                   , xK_b                    ), sendMessage ToggleStruts                 )
         ]
