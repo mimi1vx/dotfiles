@@ -137,3 +137,6 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " Don't autofold code
 let g:pymode_folding = 0
+
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
