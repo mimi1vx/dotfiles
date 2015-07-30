@@ -22,6 +22,8 @@ Plugin 'scrooloose/syntastic'
 Plugin 'ervandew/supertab'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'itchyny/calendar.vim'
+
 
 "las line for plugins
 call vundle#end()
