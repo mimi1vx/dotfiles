@@ -9,6 +9,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
 --xmonad actions
+import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.Submap
 --xmonad utils
@@ -47,8 +48,8 @@ myWorkspaces =
   ["con","web","irc","email"] ++ map show [5 .. 9]
 ------------------------------------------------------------------------
 -- add mouse buttons
---button8 = 8 :: Button
---button9 = 9 :: Button
+button8 = 8 :: Button
+button9 = 9 :: Button
 ------------------------------------------------------------------------
 -- Layouts:
 -- You can specify and transform your layouts by modifying these values.
@@ -203,10 +204,7 @@ defaults =
                 ,layoutHook = myLayout
                 ,manageHook = myManageHook
                 ,handleEventHook = myEventHook
-                ,startupHook = myStartupHook}   --`removeKeys`
-   
-  --  [ (mod4Mask .|. m, k) | (m, k) <- zip [0, shiftMask] [xK_w, xK_e, xK_r,xK_p] ]
-  `additionalKeys`
+                ,startupHook = myStartupHook} `additionalKeys`
   [((mod4Mask,xK_g),goToSelected defaultGSConfig) -- Gridselect
   ,((mod4Mask,xK_Print),spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'") -- screenshot
   ,((mod4Mask,xK_s),scratchpadSpawnAction defaults) -- scratchpad
@@ -225,4 +223,7 @@ defaults =
   ,((0,xF86XK_AudioLowerVolume),spawn "pulseaudio-ctl down")
   ,((0,xF86XK_MonBrightnessUp),spawn "xbacklight +5")
   ,((0,xF86XK_MonBrightnessDown),spawn "xbacklight -5")
-  ,((mod4Mask,xK_b),sendMessage ToggleStruts)]
+  ,((mod4Mask,xK_b),sendMessage ToggleStruts)] `additionalMouseBindings`
+  [((0,button8),const prevWS) -- cycle Workspace up
+  ,((0,button9),const nextWS) -- cycle Workspace down
+   ]
