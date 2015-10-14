@@ -10,15 +10,16 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs..
+# Customize to your needs...
 
-
-# history share
 setopt SHARE_HISTORY
 
-#own aliases
-if [[ -s "${ZDOTDIR:-$HOME}/.zsh/alias.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zsh/alias.zsh"
-fi
+#if [[ -s "${ZDOTDIR:-$HOME}/.zsh/alias.zsh" ]]; then
+#    source "${ZDOTDIR:-$HOME}/.zsh/alias.zsh"
+#fi
+#
 
+for i in ${ZDOTDIT:-${HOME}}/.zsh/*.zsh ; do
+    source ${i}
+done
 
