@@ -7,6 +7,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 --xmonad actions
 import XMonad.Actions.CycleWS
@@ -123,7 +124,7 @@ myManageHook =
         myFloats = 
           ["Steam","steam","vlc","Vlc","mpv"]
         myWorkspaceMove = 
-          [("Google-chrome-stable","web")
+          [("google-chrome","web")
           ,("urxvt","con")
           ,("weechat","irc")
           ,("Steam","steam")
@@ -145,9 +146,10 @@ myManageHook =
 myEventHook = fullscreenEventHook <+> hintsEventHook <+> docksEventHook
 ------------------------------------------------------------------------
 -- myStartupHook
-myStartupHook :: X ()
+myStartupHook :: X () 
 myStartupHook = 
   do setDefaultCursor xC_left_ptr
+     setWMName "LG3D"
      spawnOnce "google-chrome-stable"
      spawnOnce "urxvtc-256color"
 ------------------------------------------------------------------------
@@ -194,6 +196,7 @@ main = xmonad =<< myXmobar defaults
 ------------------------------------------------------------------------
 myUrgencyHook = 
   withUrgencyHook LibNotifyUrgencyHook
+
 defaults = 
   myUrgencyHook $
   ewmh $
