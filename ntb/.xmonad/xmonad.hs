@@ -133,7 +133,7 @@ myManageHook =
           ,("Weechat","irc")
           ,("Thunderbird","email")
           ,("Mail","email")]
-        myTitleFloats = ["Hangouts"]
+        myTitleFloats = ["Hangouts – mimi.vx@gmail.com"]
 ------------------------------------------------------------------------
 -- Event handling
 --
