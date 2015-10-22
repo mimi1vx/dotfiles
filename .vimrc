@@ -1,32 +1,30 @@
 set nocompatible
-filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
 "from here add plugins
 "
-Plugin 'gmarik/Vundle.vim'
-Plugin 'tomasr/molokai'
-Plugin 'haskell.vim'
-Plugin 'lukerandall/haskellmode-vim'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'klen/python-mode'
-Plugin 'mkitt/tabline.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'bling/vim-airline'
-Plugin 'eagletmt/neco-ghc'
-Plugin 'Rip-Rip/clang_complete'
-Plugin 'tpope/vim-fugitive'
-Plugin 'scrooloose/syntastic'
-Plugin 'ervandew/supertab'
-Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
-Plugin 'itchyny/calendar.vim'
+Plug 'tomasr/molokai'
+Plug 'haskell.vim', { 'for': 'haskell' }
+Plug 'lukerandall/haskellmode-vim', { 'for': 'haskell' }
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+Plug 'klen/python-mode', { 'for': 'python' }
+Plug 'mkitt/tabline.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'bling/vim-airline'
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'Rip-Rip/clang_complete'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/syntastic'
+Plug 'ervandew/supertab'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'itchyny/calendar.vim'
 
 
 "las line for plugins
-call vundle#end()
+call plug#end()
+
 
 colorscheme molokai
 set encoding=utf-8
@@ -52,6 +50,8 @@ set expandtab       " tabs are spaces
 "filetype detection
 filetype indent on
 filetype plugin on
+"omnicomplete 
+set omnifunc=syntaxcomplete#Complete
 
 syntax on
 set incsearch           " search as characters are entered
