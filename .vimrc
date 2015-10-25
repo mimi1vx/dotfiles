@@ -4,7 +4,6 @@ call plug#begin('~/.vim/plugged')
 "from here add plugins
 "
 Plug 'tomasr/molokai'
-"Plug 'haskell.vim', { 'for': 'haskell' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'lukerandall/haskellmode-vim', { 'for': 'haskell' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
@@ -13,6 +12,7 @@ Plug 'mkitt/tabline.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'bling/vim-airline'
+Plug 'bling/vim-bufferline'
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'Rip-Rip/clang_complete'
 Plug 'airblade/vim-gitgutter'
@@ -23,6 +23,7 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'itchyny/calendar.vim'
 Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
+Plug 'majutsushi/tagbar'
 
 "las line for plugins
 call plug#end()
@@ -52,7 +53,7 @@ set expandtab       " tabs are spaces
 "filetype detection
 filetype indent on
 filetype plugin on
-"omnicomplete 
+"omnicomplete
 set omnifunc=syntaxcomplete#Complete
 
 syntax on
@@ -79,9 +80,10 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set writebackup
 
 set mouse=a
-":let g:airline_powerline_fonts = 1
+" airline settings
 set laststatus=2
-:let g:airline_theme='molokai'
+let g:airline_theme='molokai'
+
 
 "markdown ... i not use modula
 au BufRead,BufNewFile *.md set filetype=markdown
@@ -97,6 +99,8 @@ let g:ctrlp_cmd = 'CtrlP'
 
 " NerdTree
 map <F2> :NERDTreeToggle<CR>
+" TagBar
+nmap <F8> :TagbarToggle<CR>
 
 " Python-mode
 " Keys:
