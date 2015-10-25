@@ -4,7 +4,8 @@ call plug#begin('~/.vim/plugged')
 "from here add plugins
 "
 Plug 'tomasr/molokai'
-Plug 'haskell.vim', { 'for': 'haskell' }
+"Plug 'haskell.vim', { 'for': 'haskell' }
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'lukerandall/haskellmode-vim', { 'for': 'haskell' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 Plug 'klen/python-mode', { 'for': 'python' }
@@ -14,13 +15,14 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'bling/vim-airline'
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'Rip-Rip/clang_complete'
+Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/syntastic'
 Plug 'ervandew/supertab'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'itchyny/calendar.vim'
-
+Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
 
 "las line for plugins
 call plug#end()
