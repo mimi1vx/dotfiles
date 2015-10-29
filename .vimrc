@@ -14,7 +14,7 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'bling/vim-airline'
 Plug 'bling/vim-bufferline'
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-Plug 'Rip-Rip/clang_complete'
+"Plug 'Rip-Rip/clang_complete'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/syntastic'
@@ -24,6 +24,7 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'itchyny/calendar.vim'
 Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
 Plug 'majutsushi/tagbar'
+Plug 'Shougo/vimproc.vim', { 'do': 'make'  }
 
 "las line for plugins
 call plug#end()
