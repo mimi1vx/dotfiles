@@ -13,8 +13,8 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'bling/vim-airline'
 Plug 'bling/vim-bufferline'
+Plug 'Shougo/neocomplete.vim'
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-"Plug 'Rip-Rip/clang_complete'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/syntastic'
@@ -89,7 +89,7 @@ let g:airline_theme='molokai'
 "markdown ... i not use modula
 au BufRead,BufNewFile *.md set filetype=markdown
 
-"collums
+" columns
 
 set colorcolumn=78,85
 highlight ColorColumn ctermbg=Magenta
@@ -123,7 +123,7 @@ let g:pymode_rope = 0
 let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
 
-"Linting
+" Linting
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
 " Auto check on save
@@ -145,5 +145,31 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 " Don't autofold code
 let g:pymode_folding = 0
 
+" Calender options
 let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
+
+" neocomplete
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+
+" Neco-ghc
+let g:haskellmode_completion_ghc = 0
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+
+" spell check
+" from http://vim.wikia.com/wiki/Toggle_spellcheck_with_function_keys
+let b:myLang=0
+let g:myLangList=["nospell","en","cs"]
+function! ToggleSpell()
+  let b:myLang=b:myLang+1
+  if b:myLang>=len(g:myLangList) | let b:myLang=0 | endif
+  if b:myLang==0
+    setlocal nospell
+  else
+    execute "setlocal spell spelllang=".get(g:myLangList, b:myLang)
+  endif
+  echo "spell checking language:" g:myLangList[b:myLang]
+endfunction
+
+nmap <silent> <F7> :call ToggleSpell()<CR>
