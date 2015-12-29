@@ -39,7 +39,7 @@ import Graphics.X11.ExtraTypes.XF86
 ------------------------------------------------------------------------
 promptConfig :: XPConfig
 promptConfig = 
-  defaultXPConfig {font = "xft:Source Code Pro:pixelsize=14"
+  def {font = "xft:Source Code Pro:pixelsize=14"
                   ,borderColor = "#1e2320"
                   ,height = 18
                   ,position = Top}
@@ -61,14 +61,16 @@ button9 = 9 :: Button
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
+myBorders = lessBorders (Combine Union Screen OnlyFloat)
+
 myLayout = 
   avoidStruts $
-  smartBorders $
+  myBorders $
   layoutHints $
   onWorkspace "con"
               (tab ||| tiled ||| mtiled) $
   onWorkspaces ["web","irc"]
-               full $
+              full $
   full ||| tab ||| tiled ||| mtiled
   where 
         -- default tiling algorithm partitions the screen into two panes
@@ -112,7 +114,6 @@ myManageHook =
   -- fulscreen windows to fullfloating
   ++
   [isFullscreen --> doFullFloat] ++
-  [title =? t --> doFloat | t <- myTitleFloats] ++
   -- unmanage docks such as gnome-panel and dzen
   [fullscreenManageHook
   ,scratchpadManageHookDefault
@@ -133,7 +134,6 @@ myManageHook =
           ,("Weechat","irc")
           ,("Thunderbird","email")
           ,("Mail","email")]
-        myTitleFloats = ["Hangouts – mimi.vx@gmail.com"]
 ------------------------------------------------------------------------
 -- Event handling
 --
@@ -187,7 +187,7 @@ myXmobar
 myXmobar = 
   statusBar "xmobar"
             xmobarPP {ppSort = (. scratchpadFilterOutWorkspace) Control.Applicative.<$>
-                               ppSort defaultPP}
+                               ppSort def}
             toggleStrutsKey
 -----------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -200,7 +200,7 @@ myUrgencyHook =
 defaults = 
   myUrgencyHook $
   ewmh $
-  defaultConfig {terminal = "urxvtc-256color"  -- unicode rxvt as client for urxvtd started in .xsession file
+  def {terminal = "urxvtc-256color"  -- unicode rxvt as client for urxvtd started in .xsession file
                 ,borderWidth = 2
                 ,modMask = mod4Mask
                 ,workspaces = myWorkspaces
@@ -208,7 +208,7 @@ defaults =
                 ,manageHook = myManageHook
                 ,handleEventHook = myEventHook
                 ,startupHook = myStartupHook} `additionalKeys`
-  [((mod4Mask,xK_g),goToSelected defaultGSConfig) -- Gridselect
+  [((mod4Mask,xK_g),goToSelected def) -- Gridselect
   ,((mod4Mask,xK_Print),spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/Shot/'") -- screenshot
   ,((mod4Mask,xK_s),scratchpadSpawnAction defaults) -- scratchpad
   ,((mod4Mask .|. controlMask,xK_p)
