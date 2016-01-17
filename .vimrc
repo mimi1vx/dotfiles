@@ -4,8 +4,6 @@ call plug#begin('~/.vim/plugged')
 "from here add plugins
 "
 Plug 'tomasr/molokai'
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'lukerandall/haskellmode-vim', { 'for': 'haskell' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'mkitt/tabline.vim'
@@ -14,6 +12,8 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'bling/vim-airline'
 Plug 'bling/vim-bufferline'
 Plug 'Shougo/neocomplete.vim'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/neosnippet.vim'
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -25,6 +25,14 @@ Plug 'itchyny/calendar.vim'
 Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
 Plug 'majutsushi/tagbar'
 Plug 'Shougo/vimproc.vim', { 'do': 'make'  }
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
+Plug 'lukerandall/haskellmode-vim', { 'for': 'haskell' }
+
 
 "las line for plugins
 call plug#end()
@@ -173,3 +181,13 @@ function! ToggleSpell()
 endfunction
 
 nmap <silent> <F7> :call ToggleSpell()<CR>
+
+function! Pointfree()
+  call setline('.', split(system('pointfree '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
+endfunction
+vnoremap <silent> <leader>h. :call Pointfree()<CR>
+
+function! Pointful()
+  call setline('.', split(system('pointful '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
+endfunction
+vnoremap <silent> <leader>h> :call Pointful()<CR>
